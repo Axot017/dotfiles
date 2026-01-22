@@ -1,0 +1,124 @@
+/* Rofi configuration - Tokyo Night theme */
+/* Matching your NixOS rofi.nix config */
+
+configuration {
+    modi: "drun,run,window";
+    show-icons: true;
+    icon-theme: "Papirus-Dark";
+    terminal: "ghostty";
+    drun-display-format: "{name}";
+    location: 0;
+    disable-history: false;
+    hide-scrollbar: true;
+    display-drun: "   Apps ";
+    display-run: "   Run ";
+    display-window: "   Window ";
+    sidebar-mode: true;
+}
+
+@theme "tokyo-night"
+
+/* Override theme with custom styling */
+* {
+    bg0: #242424E6;
+    bg1: #7E7E7E80;
+    bg2: #0860f2E6;
+    
+    fg0: #DEDEDE;
+    fg1: #FFFFFF;
+    fg2: #DEDEDE80;
+    
+    background-color: transparent;
+    text-color: @fg0;
+    
+    margin: 0;
+    padding: 0;
+    spacing: 0;
+}
+
+window {
+    location: north;
+    anchor: center;
+    y-offset: 250px;
+    width: 640px;
+    border-radius: 8px;
+    background-color: @bg0;
+}
+
+mainbox {
+    background-color: inherit;
+}
+
+inputbar {
+    padding: 12px;
+    spacing: 12px;
+    background-color: inherit;
+    children: [ icon-search, entry ];
+}
+
+icon-search {
+    expand: false;
+    filename: "search";
+    size: 24px;
+    vertical-align: 0.5;
+}
+
+entry {
+    font: inherit;
+    placeholder: "Search";
+    placeholder-color: @fg2;
+    vertical-align: 0.5;
+}
+
+message {
+    border: 2px 0 0;
+    border-color: @bg1;
+    background-color: inherit;
+}
+
+textbox {
+    padding: 8px 24px;
+}
+
+listview {
+    lines: 10;
+    columns: 1;
+    fixed-height: false;
+    border: 1px 0 0;
+    border-color: @bg1;
+    background-color: inherit;
+}
+
+element {
+    padding: 8px 16px;
+    spacing: 16px;
+    background-color: transparent;
+}
+
+element normal normal {
+    text-color: @fg0;
+}
+
+element normal urgent {
+    text-color: @fg0;
+}
+
+element normal active {
+    text-color: @fg1;
+    background-color: @bg2;
+}
+
+element selected normal,
+element selected active {
+    background-color: @bg2;
+    text-color: @fg1;
+}
+
+element-icon {
+    size: 1em;
+    vertical-align: 0.5;
+}
+
+element-text {
+    vertical-align: 0.5;
+}

@@ -1,0 +1,124 @@
+{
+  "layer": "top",
+  "position": "top",
+  "margin-top": 0,
+  "margin-left": 0,
+  "margin-right": 0,
+  "spacing": 0,
+
+  "modules-left": ["sway/workspaces", "sway/window"],
+  "modules-center": ["custom/cpu", "temperature", "memory", "disk", "clock", "custom/weather", "network", "pulseaudio", "pulseaudio#mic"],
+  "modules-right": [],
+
+  "sway/workspaces": {
+    "format": "{icon}",
+    "format-icons": {
+      "1": "",
+      "2": "",
+      "3": "",
+      "4": "",
+      "5": "",
+      "focused": "",
+      "default": ""
+    },
+    "persistent-workspaces": {
+      "*": 5
+    }
+  },
+
+  "sway/window": {
+    "format": "{}",
+    "max-length": 50,
+    "rewrite": {
+      "(.*) - Mozilla Firefox": " $1",
+      "(.*) - Zen Browser": " $1",
+      "(.*) - nvim": " $1",
+      "nvim": " nvim"
+    }
+  },
+
+  "custom/cpu": {
+    "exec": "top -bn1 | grep Cpu | awk '{printf \"%.0f%%\", $2 + $4}'",
+    "interval": 2,
+    "format": " {}",
+    "on-click": "ghostty -e htop"
+  },
+
+  "temperature": {
+    "hwmon-path-abs": "/sys/devices/platform/nct6775.2592/hwmon",
+    "input-filename": "temp7_input",
+    "critical-threshold": 80,
+    "format": " {temperatureC}°C",
+    "format-critical": " {temperatureC}°C",
+    "interval": 2
+  },
+
+  "memory": {
+    "format": "󰒋 {percentage}%",
+    "interval": 2,
+    "tooltip-format": "{used:0.1f}GB / {total:0.1f}GB"
+  },
+
+  "disk": {
+    "format": "󰋊 {percentage_used}%",
+    "path": "/",
+    "interval": 60,
+    "tooltip-format": "{used} / {total}"
+  },
+
+  "clock": {
+    "format": "{:%H:%M}",
+    "format-alt": "{:%Y-%m-%d %H:%M}",
+    "tooltip-format": "<tt><small>{calendar}</small></tt>",
+    "calendar": {
+      "mode": "month",
+      "weeks-pos": "right",
+      "format": {
+        "months": "<span color='#c0caf5'><b>{}</b></span>",
+        "days": "<span color='#565f89'>{}</span>",
+        "weeks": "<span color='#7aa2f7'>W{}</span>",
+        "weekdays": "<span color='#e0af68'>{}</span>",
+        "today": "<span color='#f7768e'><b>{}</b></span>"
+      }
+    },
+    "on-click": "xdg-open https://calendar.google.com"
+  },
+
+  "custom/weather": {
+    "exec": "~/.config/waybar/scripts/weather.sh",
+    "interval": 900,
+    "format": "{}",
+    "return-type": "json",
+    "on-click": "xdg-open https://openweathermap.org/city/3096472"
+  },
+
+  "network": {
+    "format-wifi": "{signalStrength}% {icon}",
+    "format-ethernet": "󰈁",
+    "format-disconnected": "󰤮",
+    "format-icons": ["󰤯", "󰤟", "󰤢", "󰤥", "󰤨"],
+    "tooltip-format-wifi": "{essid} ({signalStrength}%)",
+    "tooltip-format-ethernet": "{ifname}: {ipaddr}",
+    "on-click": "ghostty -e nmtui"
+  },
+
+  "pulseaudio": {
+    "format": "{volume}% 󰕾",
+    "format-muted": "󰖁",
+    "format-icons": {
+      "default": ["󰕿", "󰖀", "󰕾"]
+    },
+    "scroll-step": 5,
+    "on-click": "pavucontrol",
+    "on-click-right": "pactl set-sink-mute @DEFAULT_SINK@ toggle"
+  },
+
+  "pulseaudio#mic": {
+    "format": "{format_source}",
+    "format-source": "{volume}% ",
+    "format-source-muted": "",
+    "scroll-step": 5,
+    "on-click": "pavucontrol",
+    "on-click-right": "pactl set-source-mute @DEFAULT_SOURCE@ toggle"
+  }
+}

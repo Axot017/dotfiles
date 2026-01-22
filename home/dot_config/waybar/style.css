@@ -1,0 +1,140 @@
+/* Waybar style - Tokyo Night theme, matching AGS bar */
+
+* {
+  font-family: "JetBrainsMonoNL Nerd Font Mono", "Symbols Nerd Font Mono";
+  font-size: 16px;
+  min-height: 0;
+}
+
+window#waybar {
+  background: transparent;
+}
+
+/* Common module styling */
+#workspaces,
+#window,
+#custom-cpu,
+#temperature,
+#memory,
+#disk,
+#clock,
+#custom-weather,
+#network,
+#pulseaudio {
+  background-color: #24283b;
+  color: #c0caf5;
+  border: 1px solid #7aa2f7;
+  margin-top: 8px;
+  padding-left: 24px;
+  padding-right: 24px;
+  min-height: 28px;
+}
+
+/* Left modules - workspaces and window title */
+#workspaces {
+  padding-left: 12px;
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 32px;
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+
+#workspaces button {
+  color: #565f89;
+  padding: 0 8px;
+  background: transparent;
+  border: none;
+}
+
+#workspaces button.focused,
+#workspaces button.active {
+  color: #e0af68;
+}
+
+#workspaces button:hover {
+  color: #7aa2f7;
+  background: transparent;
+  box-shadow: none;
+}
+
+#window {
+  margin-left: 4px;
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 32px;
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+}
+
+/* Center modules - system info */
+#custom-cpu,
+#memory,
+#temperature,
+#disk {
+  margin-left: 4px;
+  margin-right: 4px;
+  min-width: 72px;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 32px;
+  border-bottom-left-radius: 32px;
+  border-bottom-right-radius: 8px;
+}
+
+#custom-weather,
+#network,
+#pulseaudio {
+  margin-left: 4px;
+  margin-right: 4px;
+  min-width: 72px;
+  border-top-left-radius: 32px;
+  border-top-right-radius: 8px;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 32px;
+}
+
+#clock {
+  margin-left: 4px;
+  margin-right: 4px;
+  min-width: 72px;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  border-bottom-left-radius: 32px;
+  border-bottom-right-radius: 32px;
+}
+
+/* Icon colors */
+#custom-cpu,
+#temperature,
+#memory,
+#disk,
+#custom-weather,
+#network,
+#pulseaudio {
+  /* Icons will be colored via the format string */
+}
+
+/* Temperature warning states */
+#temperature.critical {
+  color: #f7768e;
+}
+
+/* Network states */
+#network.disconnected {
+  color: #f7768e;
+}
+
+/* Pulseaudio states */
+#pulseaudio.muted {
+  color: #565f89;
+}
+
+/* Tooltip styling */
+tooltip {
+  background-color: #24283b;
+  border: 1px solid #7aa2f7;
+  border-radius: 8px;
+}
+
+tooltip label {
+  color: #c0caf5;
+  padding: 8px;
+}

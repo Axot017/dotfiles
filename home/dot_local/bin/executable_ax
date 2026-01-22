@@ -1,0 +1,3 @@
+#!/bin/bash
+# Wrapper script for ax tool
+exec python3 ~/Projects/dotfiles/ax/ax.py "$@"

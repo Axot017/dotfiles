@@ -1,0 +1,16 @@
+# Chezmoi configuration
+# This file is a template that gets processed when running `chezmoi init`
+
+[data]
+    name = "Mateusz Ledwon"
+    email = "mateuszledwon@duck.com"
+
+[edit]
+    command = "nvim"
+
+[diff]
+    pager = "less -R"
+
+[merge]
+    command = "nvim"
+    args = ["-d", "{{ "{{" }} .Destination {{ "}}" }}", "{{ "{{" }} .Source {{ "}}" }}", "{{ "{{" }} .Target {{ "}}" }}"]

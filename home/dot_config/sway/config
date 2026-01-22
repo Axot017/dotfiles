@@ -1,0 +1,220 @@
+# Sway configuration
+# Translated from Hyprland config
+
+#
+# Variables
+#
+set $mod Mod4
+set $term ghostty
+set $menu rofi -show drun -show-icons
+set $left h
+set $down j
+set $up k
+set $right l
+
+#
+# Output configuration
+#
+output * bg ~/Projects/dotfiles/nix-config/wallpapers/witcher.jpg fill
+
+#
+# Input configuration
+#
+input type:keyboard {
+    xkb_layout pl,us
+    xkb_options grp:alt_shift_toggle
+}
+
+input type:pointer {
+    accel_profile flat
+}
+
+#
+# Appearance
+#
+# Gaps
+gaps inner 4
+gaps outer 8
+
+# Border
+default_border pixel 2
+default_floating_border pixel 2
+
+# Colors (Tokyo Night inspired)
+# class                 border  bg      text    indicator child_border
+client.focused          #c211d0 #24283b #c0caf5 #4da9ce   #c211d0
+client.focused_inactive #414868 #24283b #c0caf5 #414868   #414868
+client.unfocused        #414868 #24283b #565f89 #414868   #414868
+client.urgent           #f7768e #24283b #c0caf5 #f7768e   #f7768e
+
+# Font
+font pango:JetBrainsMonoNL Nerd Font Mono 10
+
+# Corner radius (requires sway with rounded corners patch or use swayfx)
+# corner_radius 8
+
+#
+# Startup
+#
+exec_always {
+    # Clipboard manager
+    wl-paste --type text --watch cliphist store
+    wl-paste --type image --watch cliphist store
+}
+
+exec {
+    # Status bar
+    waybar
+    
+    # Notification daemon
+    swaync
+}
+
+#
+# Key bindings - Applications
+#
+# Terminal
+bindsym $mod+t exec $term
+
+# Application launcher
+bindsym $mod+space exec $menu
+
+# Kill focused window
+bindsym $mod+q kill
+
+# Clipboard history
+bindsym $mod+v exec cliphist list | rofi -dmenu | cliphist decode | wl-copy
+
+# Power menu
+bindsym $mod+p exec rofi -show power-menu -modi "power-menu:~/.config/rofi/scripts/power-menu"
+
+# Notification center
+bindsym $mod+n exec swaync-client -t -sw
+
+# Screenshots
+bindsym $mod+s exec grim -o $(swaymsg -t get_outputs | jq -r '.[] | select(.focused) | .name') ~/Pictures/Screenshots/$(date +"%Y-%m-%dT%H:%M:%S").png
+bindsym $mod+Ctrl+s exec grim -g "$(slurp)" ~/Pictures/Screenshots/$(date +"%Y-%m-%dT%H:%M:%S").png
+
+#
+# Key bindings - Navigation
+#
+# Move focus
+bindsym $mod+$left focus left
+bindsym $mod+$down focus down
+bindsym $mod+$up focus up
+bindsym $mod+$right focus right
+
+# Move focused window
+bindsym $mod+Shift+$left move left
+bindsym $mod+Shift+$down move down
+bindsym $mod+Shift+$up move up
+bindsym $mod+Shift+$right move right
+
+# Workspaces
+bindsym $mod+1 workspace number 1
+bindsym $mod+2 workspace number 2
+bindsym $mod+3 workspace number 3
+bindsym $mod+4 workspace number 4
+bindsym $mod+5 workspace number 5
+bindsym $mod+6 workspace number 6
+bindsym $mod+7 workspace number 7
+bindsym $mod+8 workspace number 8
+bindsym $mod+9 workspace number 9
+bindsym $mod+0 workspace number 10
+
+# Move to workspace
+bindsym $mod+Shift+1 move container to workspace number 1
+bindsym $mod+Shift+2 move container to workspace number 2
+bindsym $mod+Shift+3 move container to workspace number 3
+bindsym $mod+Shift+4 move container to workspace number 4
+bindsym $mod+Shift+5 move container to workspace number 5
+bindsym $mod+Shift+6 move container to workspace number 6
+bindsym $mod+Shift+7 move container to workspace number 7
+bindsym $mod+Shift+8 move container to workspace number 8
+bindsym $mod+Shift+9 move container to workspace number 9
+bindsym $mod+Shift+0 move container to workspace number 10
+
+#
+# Key bindings - Layout
+#
+# Fullscreen
+bindsym $mod+f fullscreen
+
+# Toggle floating
+bindsym $mod+Shift+f floating toggle
+
+# Split orientation
+bindsym $mod+b splith
+bindsym $mod+Shift+v splitv
+
+# Layout toggle
+bindsym $mod+e layout toggle split tabbed stacking
+
+# Focus parent/child
+bindsym $mod+a focus parent
+
+# Scratchpad
+bindsym $mod+Shift+minus move scratchpad
+bindsym $mod+minus scratchpad show
+
+#
+# Key bindings - Resize
+#
+bindsym $mod+Ctrl+$left resize shrink width 10px
+bindsym $mod+Ctrl+$down resize grow height 10px
+bindsym $mod+Ctrl+$up resize shrink height 10px
+bindsym $mod+Ctrl+$right resize grow width 10px
+
+# Resize mode (alternative)
+mode "resize" {
+    bindsym $left resize shrink width 10px
+    bindsym $down resize grow height 10px
+    bindsym $up resize shrink height 10px
+    bindsym $right resize grow width 10px
+
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+bindsym $mod+r mode "resize"
+
+#
+# Key bindings - System
+#
+# Reload config
+bindsym $mod+Shift+c reload
+
+# Exit sway
+bindsym $mod+Shift+e exec swaynag -t warning -m 'Exit sway?' -B 'Yes' 'swaymsg exit'
+
+#
+# Window rules
+#
+# Float certain windows
+for_window [app_id="pavucontrol"] floating enable
+for_window [app_id="blueman-manager"] floating enable
+for_window [app_id="nm-connection-editor"] floating enable
+for_window [title="^Picture-in-Picture$"] floating enable, sticky enable
+
+# Opacity for unfocused windows (requires swayfx or compositor)
+# Note: Sway doesn't natively support opacity like Hyprland
+# Consider using swayfx fork for this feature
+
+#
+# Status Bar
+#
+bar {
+    swaybar_command waybar
+}
+
+#
+# Idle configuration
+#
+exec swayidle -w \
+    timeout 300 'swaylock -f -c 24283b' \
+    timeout 600 'swaymsg "output * power off"' resume 'swaymsg "output * power on"' \
+    before-sleep 'swaylock -f -c 24283b'
+
+#
+# Include additional config
+#
+include /etc/sway/config.d/*

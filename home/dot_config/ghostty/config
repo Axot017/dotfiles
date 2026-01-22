@@ -1,0 +1,56 @@
+# Ghostty configuration
+
+# Font
+font-family = JetBrainsMonoNL Nerd Font Mono
+font-size = 12
+
+# Theme - Tokyo Night Storm colors
+background = 24283b
+foreground = c0caf5
+
+# Normal colors
+palette = 0=#1d202f
+palette = 1=#f7768e
+palette = 2=#9ece6a
+palette = 3=#e0af68
+palette = 4=#7aa2f7
+palette = 5=#bb9af7
+palette = 6=#7dcfff
+palette = 7=#a9b1d6
+
+# Bright colors
+palette = 8=#414868
+palette = 9=#f7768e
+palette = 10=#9ece6a
+palette = 11=#e0af68
+palette = 12=#7aa2f7
+palette = 13=#bb9af7
+palette = 14=#7dcfff
+palette = 15=#c0caf5
+
+# Cursor
+cursor-color = c0caf5
+cursor-style = block
+cursor-style-blink = true
+
+# Selection
+selection-background = 364a82
+selection-foreground = c0caf5
+
+# Window
+window-padding-x = 8
+window-padding-y = 8
+window-decoration = false
+
+# Scrollback
+scrollback-limit = 10000
+
+# Shell
+shell-integration = zsh
+
+# Custom shaders
+custom-shader = ~/.config/ghostty/shaders/cursor_smear.glsl
+
+# Keybindings (optional, ghostty has good defaults)
+# keybind = ctrl+shift+c=copy_to_clipboard
+# keybind = ctrl+shift+v=paste_from_clipboard

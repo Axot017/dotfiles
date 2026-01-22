@@ -1,0 +1,239 @@
+/* SwayNC style - Tokyo Night theme */
+/* Matching your NixOS swaync.nix config */
+
+@define-color bg #24283b;
+@define-color border-color #7aa2f7;
+@define-color fg-light #f7768e;
+@define-color warning #bb9af7;
+@define-color error #f7768e;
+@define-color text-color #c0caf5;
+@define-color text-color-disabled #565f89;
+
+* {
+  font-family: JetBrainsMonoNL Nerd Font Mono;
+}
+
+.notification-group {
+  padding: 8px;
+}
+
+.notification-row {
+  outline: none;
+  margin: 0px;
+  padding: 0px;
+}
+
+.notification {
+  background: @bg;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  border-bottom-left-radius: 32px;
+  border-bottom-right-radius: 8px;
+  border: 1px solid @border-color;
+  margin: 3px -2px 3px 0px;
+  padding-left: 24px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-right: 4px;
+}
+
+.notification-content {
+  background: @bg;
+}
+
+.close-button {
+  color: @warning;
+  background: @bg;
+  text-shadow: none;
+  padding: 0px;
+  border-radius: 0px;
+  margin-top: 5px;
+  margin-right: 5px;
+}
+
+.notification-action {
+  color: @text-color;
+}
+
+.notification-default-action:hover,
+.notification-action:hover {
+  background: transparent;
+  color: @warning;
+}
+
+.inline-reply {
+  margin-top: 8px;
+}
+
+.inline-reply-entry {
+  background: @bg;
+  color: @text-color;
+  caret-color: @text-color;
+  border: 1px solid @border-color;
+  border-radius: 5px;
+}
+
+.inline-reply-button {
+  margin-left: 4px;
+  background: @bg;
+  border: 1px solid @border-color;
+  border-radius: 5px;
+  color: @text-color;
+}
+
+.inline-reply-button:disabled {
+  background: initial;
+  color: @text-color-disabled;
+  border: 1px solid transparent;
+}
+
+.inline-reply-button:hover {
+  background: alpha(@border-color, 0.2);
+}
+
+.image {
+  border-radius: 0px;
+  margin-right: 10px;
+}
+
+.summary {
+  font-size: 16px;
+  font-weight: 700;
+  background: transparent;
+  color: #9ece6a;
+  text-shadow: none;
+}
+
+.body {
+  font-size: 15px;
+  font-weight: 400;
+  background: transparent;
+  color: @text-color;
+  text-shadow: none;
+}
+
+.control-center {
+  background: @bg;
+  border: 2px solid @border-color;
+  border-radius: 8px;
+}
+
+.control-center-list {
+  background: transparent;
+}
+
+.control-center-list-placeholder {
+  opacity: 0.5;
+}
+
+.floating-notifications {
+  background: transparent;
+}
+
+.blank-window {
+  background: alpha(black, 0.1);
+}
+
+.widget-title {
+  color: @text-color;
+  background: transparent;
+  margin-top: 24px;
+  margin-bottom: 16px;
+  font-size: 1.3rem;
+}
+
+.widget-title > button {
+  font-size: 1rem;
+  color: @text-color;
+  background: transparent;
+  border: 1px solid @text-color-disabled;
+  text-shadow: none;
+  box-shadow: none;
+}
+
+.widget-title > button:hover {
+  color: @error;
+  border: 1px solid @error;
+}
+
+.widget-label {
+  margin: 10px 10px 5px 10px;
+}
+
+.widget-label > label {
+  font-size: 1rem;
+  color: @text-color;
+}
+
+.widget-mpris {
+  color: @text-color;
+  border-radius: 8px;
+}
+
+.widget-mpris > box > button {
+  border-radius: 8px;
+}
+
+.widget-mpris-player {
+  padding: 8px 16px;
+  margin: 18px;
+}
+
+.widget-mpris-title {
+  font-weight: 700;
+  font-size: 1.25rem;
+}
+
+.widget-mpris-subtitle {
+  font-size: 1.1rem;
+}
+
+.widget-buttons-grid {
+  font-size: x-large;
+  margin-top: 16px;
+  margin-bottom: 16px;
+  background: transparent;
+}
+
+.widget-buttons-grid > flowbox > flowboxchild > button {
+  margin: 3px;
+  padding: unset;
+  background: @bg;
+  border: 1px solid @text-color;
+  color: @text-color;
+}
+
+.widget-buttons-grid > flowbox > flowboxchild > button:hover {
+  border: 1px solid @warning;
+  color: @warning;
+}
+
+.widget-buttons-grid > flowbox > flowboxchild > button:checked {
+  border: 1px solid @warning;
+  color: @warning;
+}
+
+.widget-menubar > box > .menu-button-bar > button {
+  border: none;
+  background: transparent;
+}
+
+.topbar-buttons > button {
+  border: none;
+  background: transparent;
+}
+
+.widget-volume {
+  background: transparent;
+  border-radius: 0px;
+  font-size: 2rem;
+  color: @warning;
+}
+
+scale trough {
+  background: @text-color-disabled;
+}
+
+scale trough highlight {
+  background: @warning;
+}
