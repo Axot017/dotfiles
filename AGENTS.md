@@ -6,7 +6,7 @@ This document provides guidelines for AI coding agents working in this dotfiles 
 
 This is a **dotfiles repository** for Arch Linux (migrated from NixOS). It contains:
 
-- **`home/`** - Chezmoi-managed dotfiles (maps to `~/.config/`, `~/.local/`, etc.)
+- **`home/`** - Stow-managed dotfiles (symlinked to `~/.config/`, `~/.local/`, etc.)
 - **`ax/`** - Custom Python tool for declarative package management + btrfs snapshots
 - **`nix-config/`** - Legacy NixOS configuration (kept for reference)
 - **`PLAN.md`** - Active TODO list for migration work
@@ -31,14 +31,21 @@ The `PLAN.md` file is the **primary task tracker** for this repository. When wor
 
 ## Directory Structure Rationale
 
-### `home/` - Chezmoi Source Directory
+### `home/` - Stow Package Directory
 
-Chezmoi maps this directory to `$HOME`. Naming conventions:
-- `dot_` prefix → becomes `.` (e.g., `dot_zshrc` → `~/.zshrc`)
-- `dot_config/` → `~/.config/`
-- `dot_local/` → `~/.local/`
-- `private_` prefix → file gets 0600 permissions
-- `executable_` prefix → file gets executable bit
+GNU Stow creates symlinks from this directory to `$HOME`. The directory structure mirrors the target:
+- `.config/` → symlinked to `~/.config/`
+- `.local/` → symlinked to `~/.local/`
+- `.zshrc` → symlinked to `~/.zshrc`
+- Files use their actual names (no prefixes needed)
+
+**Stow commands:**
+```bash
+cd ~/.dotfiles
+stow -t ~ home       # Apply (create symlinks)
+stow -R -t ~ home    # Restow (re-apply after changes)
+stow -D -t ~ home    # Unstow (remove symlinks)
+```
 
 ### `ax/` - Package Manager Tool
 
@@ -146,25 +153,25 @@ This is a dotfiles repo - there's no compilation step. Instead:
 python3 -m py_compile ax/ax.py
 
 # Check shell scripts
-shellcheck home/dot_config/waybar/scripts/*.sh
-shellcheck ax/install.sh
+shellcheck home/.config/waybar/scripts/*.sh
 
 # Test ax tool (dry-run)
 python3 ax/ax.py check
 python3 ax/ax.py sync --dry-run
 
 # Apply dotfiles (on Arch system)
-chezmoi apply --source ~/Projects/dotfiles/home
+cd ~/.dotfiles
+stow -R -t ~ home
 
 # Validate Lua syntax (requires luacheck)
-luacheck home/dot_config/nvim/
+luacheck home/.config/nvim/
 ```
 
 ### Testing Neovim Config
 
 ```bash
 # Start nvim with minimal config to test
-nvim --clean -u home/dot_config/nvim/init.lua
+nvim --clean -u home/.config/nvim/init.lua
 
 # Check for Lua errors
 nvim --headless -c "lua require('config')" -c "qa"
@@ -180,16 +187,16 @@ nvim --headless -c "lua require('config')" -c "qa"
 
 ### Adding a New Neovim Plugin
 
-1. Create or edit file in `home/dot_config/nvim/lua/plugins/`
+1. Create or edit file in `home/.config/nvim/lua/plugins/`
 2. Use lazy.nvim spec format
 3. Add keymaps with descriptions
-4. Test with `nvim --clean -u home/dot_config/nvim/init.lua`
+4. Test with `nvim --clean -u home/.config/nvim/init.lua`
 
 ### Adding a New Config File
 
-1. Place in `home/dot_config/<app>/`
-2. Use chezmoi naming: `dot_` prefix for hidden files
-3. Use `executable_` prefix for scripts
+1. Place in `home/.config/<app>/`
+2. Use actual file/directory names (stow mirrors the structure to `$HOME`)
+3. For scripts, ensure executable bit is set: `chmod +x <file>`
 4. Update `PLAN.md` if this completes a planned item
 
 ## Important Notes
@@ -197,7 +204,7 @@ nvim --headless -c "lua require('config')" -c "qa"
 - **Don't modify `nix-config/`** - It's kept for reference only
 - **LSP/dev tools** are managed per-project via devbox, not globally
 - **Secrets** use SOPS with age encryption
-- **Wallpapers** are in `nix-config/wallpapers/` (shared location)
+- **Wallpapers** are in `home/.local/share/wallpapers/` (symlinked to `~/.local/share/wallpapers/`)
 - **Weather API** requires OpenWeatherMap key in `~/.config/sops/secrets.yaml`
 
 ## File Locations Quick Reference
@@ -205,11 +212,11 @@ nvim --headless -c "lua require('config')" -c "qa"
 | What | Where |
 |------|-------|
 | Package lists | `ax/packages.py` |
-| Sway config | `home/dot_config/sway/config` |
-| Waybar | `home/dot_config/waybar/` |
-| Neovim | `home/dot_config/nvim/` |
-| Zsh config | `home/dot_zshrc` |
-| Oh-my-posh | `home/dot_config/oh-my-posh/config.json` |
-| Ghostty | `home/dot_config/ghostty/` |
-| Rofi | `home/dot_config/rofi/` |
-| Notifications | `home/dot_config/swaync/` |
+| Sway config | `home/.config/sway/config` |
+| Waybar | `home/.config/waybar/` |
+| Neovim | `home/.config/nvim/` |
+| Zsh config | `home/.zshrc` |
+| Oh-my-posh | `home/.config/oh-my-posh/config.json` |
+| Ghostty | `home/.config/ghostty/` |
+| Rofi | `home/.config/rofi/` |
+| Notifications | `home/.config/swaync/` |

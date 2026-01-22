@@ -6,23 +6,22 @@
   "margin-right": 0,
   "spacing": 0,
 
-  "modules-left": ["sway/workspaces", "sway/window"],
+  "modules-left": ["sway/window"],
   "modules-center": ["custom/cpu", "temperature", "memory", "disk", "clock", "custom/weather", "network", "pulseaudio", "pulseaudio#mic"],
-  "modules-right": [],
+  "modules-right": ["sway/workspaces"],
 
   "sway/workspaces": {
     "format": "{icon}",
     "format-icons": {
-      "1": "",
-      "2": "",
-      "3": "",
-      "4": "",
-      "5": "",
-      "focused": "",
-      "default": ""
+      "focused": "",
+      "default": ""
     },
     "persistent-workspaces": {
-      "*": 5
+      "1": [],
+      "2": [],
+      "3": [],
+      "4": [],
+      "5": []
     }
   },
 
@@ -30,17 +29,14 @@
     "format": "{}",
     "max-length": 50,
     "rewrite": {
-      "(.*) - Mozilla Firefox": " $1",
-      "(.*) - Zen Browser": " $1",
-      "(.*) - nvim": " $1",
-      "nvim": " nvim"
+      "": "Wallpaper"
     }
   },
 
   "custom/cpu": {
     "exec": "top -bn1 | grep Cpu | awk '{printf \"%.0f%%\", $2 + $4}'",
     "interval": 2,
-    "format": " {}",
+    "format": " {}",
     "on-click": "ghostty -e htop"
   },
 
@@ -48,7 +44,7 @@
     "hwmon-path-abs": "/sys/devices/platform/nct6775.2592/hwmon",
     "input-filename": "temp7_input",
     "critical-threshold": 80,
-    "format": " {temperatureC}°C",
+    "format": " {temperatureC}°C",
     "format-critical": " {temperatureC}°C",
     "interval": 2
   },
@@ -67,8 +63,7 @@
   },
 
   "clock": {
-    "format": "{:%H:%M}",
-    "format-alt": "{:%Y-%m-%d %H:%M}",
+    "format": "{:%Y-%m-%d %H:%M}",
     "tooltip-format": "<tt><small>{calendar}</small></tt>",
     "calendar": {
       "mode": "month",
@@ -115,7 +110,7 @@
 
   "pulseaudio#mic": {
     "format": "{format_source}",
-    "format-source": "{volume}% ",
+    "format-source": "{volume}% ",
     "format-source-muted": "",
     "scroll-step": 5,
     "on-click": "pavucontrol",

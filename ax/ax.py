@@ -2,12 +2,9 @@
 """
 ax - Arch Linux system management tool
 
-A declarative package manager wrapper with btrfs snapshot integration.
-
 Commands:
     ax sync          - Sync system packages with packages.py
-    ax edit          - Create snapshot, open dotfiles in nvim, apply changes
-    ax snapshot      - Create a manual snapshot
+    ax edit          - open dotfiles in nvim, apply changes
     ax list          - List installed packages vs declared packages
     ax check         - Check for differences without making changes
 """
@@ -23,17 +20,17 @@ from pathlib import Path
 AX_DIR = Path(__file__).parent
 sys.path.insert(0, str(AX_DIR))
 
-from packages import SYSTEM_PACKAGES, AUR_PACKAGES, KEEP_PACKAGES, GROUPS
+from packages import SYSTEM_PACKAGES, AUR_PACKAGES, KEEP_PACKAGES
 
-DOTFILES_DIR = Path.home() / "Projects" / "dotfiles"
+DOTFILES_DIR = Path.home() / ".dotfiles"
 SNAPPER_CONFIG = "root"
 
 
-def run(cmd: list[str], check: bool = True, capture: bool = False) -> subprocess.CompletedProcess:
+def run(cmd: list[str], check: bool = True, capture: bool = False, cwd: str | None = None) -> subprocess.CompletedProcess:
     """Run a command and optionally capture output."""
     if capture:
-        return subprocess.run(cmd, check=check, capture_output=True, text=True)
-    return subprocess.run(cmd, check=check)
+        return subprocess.run(cmd, check=check, capture_output=True, text=True, cwd=cwd)
+    return subprocess.run(cmd, check=check, cwd=cwd)
 
 
 def run_sudo(cmd: list[str], check: bool = True) -> subprocess.CompletedProcess:
@@ -41,8 +38,16 @@ def run_sudo(cmd: list[str], check: bool = True) -> subprocess.CompletedProcess:
     return run(["sudo"] + cmd, check=check)
 
 
-def get_installed_packages() -> set[str]:
-    """Get set of explicitly installed packages."""
+def get_all_packages() -> set[str]:
+    """Get set of all installed packages (including dependencies)."""
+    result = run(["pacman", "-Qq"], capture=True, check=False)
+    if result.returncode != 0:
+        return set()
+    return set(result.stdout.strip().split("\n")) if result.stdout.strip() else set()
+
+
+def get_explicit_packages() -> set[str]:
+    """Get set of explicitly installed packages (not dependencies)."""
     result = run(["pacman", "-Qeq"], capture=True, check=False)
     if result.returncode != 0:
         return set()
@@ -55,29 +60,6 @@ def get_aur_packages() -> set[str]:
     if result.returncode != 0:
         return set()
     return set(result.stdout.strip().split("\n")) if result.stdout.strip() else set()
-
-
-def create_snapshot(description: str) -> str | None:
-    """Create a snapper snapshot and return the snapshot number."""
-    try:
-        result = run_sudo(
-            ["snapper", "-c", SNAPPER_CONFIG, "create", "-d", description, "-p"],
-            check=True
-        )
-        # snapper -p prints the snapshot number
-        return result.stdout.strip() if hasattr(result, 'stdout') and result.stdout else None
-    except subprocess.CalledProcessError as e:
-        print(f"Warning: Failed to create snapshot: {e}")
-        return None
-
-
-def delete_snapshot(snapshot_num: str) -> bool:
-    """Delete a snapshot by number."""
-    try:
-        run_sudo(["snapper", "-c", SNAPPER_CONFIG, "delete", snapshot_num])
-        return True
-    except subprocess.CalledProcessError:
-        return False
 
 
 def install_packages(packages: list[str], aur: bool = False) -> bool:
@@ -112,38 +94,27 @@ def remove_packages(packages: list[str]) -> bool:
         return False
 
 
-def sync_packages(dry_run: bool = False, groups: list[str] | None = None) -> bool:
+def sync_packages(dry_run: bool = False) -> bool:
     """Sync installed packages with declared packages."""
     
     # Build target package sets
     target_system = set(SYSTEM_PACKAGES)
     target_aur = set(AUR_PACKAGES)
-    
-    # Add group packages if specified
-    if groups:
-        for group in groups:
-            if group in GROUPS:
-                # Determine if group packages are AUR or not
-                group_name = group
-                if group.endswith("-aur"):
-                    target_aur.update(GROUPS[group])
-                else:
-                    target_system.update(GROUPS[group])
-            else:
-                print(f"Warning: Unknown group '{group}'")
-    
+
     # Get current state
-    installed = get_installed_packages()
+    all_installed = get_all_packages()          # All packages (for install check)
+    explicit = get_explicit_packages()          # Explicit only (for removal check)
     installed_aur = get_aur_packages()
-    installed_official = installed - installed_aur
+    installed_official = all_installed - installed_aur
     
-    # Calculate differences
+    # Calculate what to install (check against ALL installed packages)
     to_install_system = target_system - installed_official
     to_install_aur = target_aur - installed_aur
     
-    # Packages to remove: installed but not in any target list
+    # Packages to remove: explicit packages not in any target list
+    # Only consider explicit packages for removal (not dependencies)
     all_targets = target_system | target_aur
-    to_remove = (installed - all_targets) - set(KEEP_PACKAGES)
+    to_remove = (explicit - all_targets) - set(KEEP_PACKAGES)
     
     # Filter out packages that are dependencies
     if to_remove:
@@ -165,6 +136,12 @@ def sync_packages(dry_run: bool = False, groups: list[str] | None = None) -> boo
         return True
     
     success = True
+
+    # Remove orphaned packages
+    if to_remove:
+        print(f"\nRemoving packages: {', '.join(sorted(to_remove))}")
+        if not remove_packages(list(to_remove)):
+            success = False
     
     # Install system packages
     if to_install_system:
@@ -178,11 +155,6 @@ def sync_packages(dry_run: bool = False, groups: list[str] | None = None) -> boo
         if not install_packages(list(to_install_aur), aur=True):
             success = False
     
-    # Remove orphaned packages
-    if to_remove:
-        print(f"\nRemoving packages: {', '.join(sorted(to_remove))}")
-        if not remove_packages(list(to_remove)):
-            success = False
     
     if success and not (to_install_system or to_install_aur or to_remove):
         print("System is already in sync!")
@@ -192,14 +164,11 @@ def sync_packages(dry_run: bool = False, groups: list[str] | None = None) -> boo
 
 def cmd_sync(args):
     """Handle sync command."""
-    groups = args.group if hasattr(args, 'group') and args.group else None
-    return sync_packages(dry_run=args.dry_run, groups=groups)
+    return sync_packages(dry_run=args.dry_run)
 
 
 def cmd_edit(args):
     """Handle edit command - the main workflow."""
-    print("Creating pre-edit snapshot...")
-    snapshot_num = create_snapshot(f"ax edit - {datetime.now().isoformat()}")
     
     # Change to dotfiles directory
     os.chdir(DOTFILES_DIR)
@@ -216,20 +185,12 @@ def cmd_edit(args):
     after_result = run(["git", "status", "--porcelain"], capture=True)
     after_status = after_result.stdout.strip()
     
-    # Check if there are changes
-    if before_status == after_status:
-        print("\nNo changes detected.")
-        if snapshot_num:
-            print(f"Removing snapshot {snapshot_num}...")
-            delete_snapshot(snapshot_num)
-        return True
-    
     print("\nChanges detected:")
     run(["git", "diff", "--stat"])
     
-    # Apply chezmoi changes
-    print("\nApplying chezmoi changes...")
-    run(["chezmoi", "apply", "--source", str(DOTFILES_DIR / "home")])
+    # Apply dotfiles with stow
+    print("\nApplying dotfiles with stow...")
+    run(["stow", "-R", "--no-folding", "-t", str(Path.home()), "home"], cwd=str(DOTFILES_DIR))
     
     # Sync packages
     print("\nSyncing packages...")
@@ -240,7 +201,7 @@ def cmd_edit(args):
     run(["git", "add", "-A"])
     
     # Generate commit message
-    commit_msg = f"ax edit - {datetime.now().strftime('%Y-%m-%d %H:%M')}"
+    commit_msg = f"{datetime.now().strftime('%Y-%m-%d %H:%M')}"
     run(["git", "commit", "-m", commit_msg])
     
     # Ask about push
@@ -252,21 +213,12 @@ def cmd_edit(args):
     return True
 
 
-def cmd_snapshot(args):
-    """Handle snapshot command."""
-    description = args.description or f"Manual snapshot - {datetime.now().isoformat()}"
-    snapshot_num = create_snapshot(description)
-    if snapshot_num:
-        print(f"Created snapshot: {snapshot_num}")
-        return True
-    return False
-
-
 def cmd_list(args):
     """Handle list command."""
-    installed = get_installed_packages()
+    all_installed = get_all_packages()
+    explicit = get_explicit_packages()
     installed_aur = get_aur_packages()
-    installed_official = installed - installed_aur
+    installed_official = all_installed - installed_aur
     
     target_system = set(SYSTEM_PACKAGES)
     target_aur = set(AUR_PACKAGES)
@@ -276,12 +228,13 @@ def cmd_list(args):
     
     print("Declared (official):", len(target_system))
     print("Declared (AUR):", len(target_aur))
-    print("Installed (explicit):", len(installed))
+    print("Installed (all):", len(all_installed))
+    print("Installed (explicit):", len(explicit))
     print("Installed (AUR):", len(installed_aur))
     
     missing_system = target_system - installed_official
     missing_aur = target_aur - installed_aur
-    extra = (installed - all_targets) - set(KEEP_PACKAGES)
+    extra = (explicit - all_targets) - set(KEEP_PACKAGES)
     
     if missing_system:
         print(f"\nMissing (official): {', '.join(sorted(missing_system))}")
@@ -312,7 +265,6 @@ Examples:
     ax sync --dry-run    # Show what would be done
     ax sync -g gaming    # Sync with gaming group
     ax edit              # Edit dotfiles workflow
-    ax snapshot "test"   # Create named snapshot
     ax list              # List package status
     ax check             # Check sync status
         """
@@ -329,11 +281,6 @@ Examples:
     # edit command
     edit_parser = subparsers.add_parser("edit", help="Edit dotfiles workflow")
     edit_parser.set_defaults(func=cmd_edit)
-    
-    # snapshot command
-    snapshot_parser = subparsers.add_parser("snapshot", help="Create a snapshot")
-    snapshot_parser.add_argument("description", nargs="?", help="Snapshot description")
-    snapshot_parser.set_defaults(func=cmd_snapshot)
     
     # list command
     list_parser = subparsers.add_parser("list", help="List package status")

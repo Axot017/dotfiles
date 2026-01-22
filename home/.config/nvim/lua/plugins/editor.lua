@@ -1,5 +1,3 @@
--- Editor plugins: oil, gitsigns, autopairs, surround
-
 return {
   -- Oil file explorer
   {

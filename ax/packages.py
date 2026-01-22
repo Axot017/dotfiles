@@ -10,8 +10,13 @@ SYSTEM_PACKAGES = [
     # Base
     "base-devel",
     "git",
-    "vim",
+    "wpa_supplicant",
+    "curl",
+    "wget",
+    "inotify-tools",
+
     "neovim",
+    "tree-sitter-cli",
     
     # Filesystem
     "btrfs-progs",
@@ -29,16 +34,18 @@ SYSTEM_PACKAGES = [
     "zsh-autosuggestions",
     "zsh-syntax-highlighting",
     "fzf",
+    "zoxide",
     
     # Terminal
     "ghostty",
     
     # Wayland / Sway
     "sway",
+    "swaybg",
     "swaylock",
     "swayidle",
     "waybar",
-    "rofi-wayland",
+    "rofi",
     "swaync",
     "grim",
     "slurp",
@@ -54,6 +61,9 @@ SYSTEM_PACKAGES = [
     "pipewire-alsa",
     "wireplumber",
     "pavucontrol",
+    "gst-plugin-pipewire",
+    "libpulse",
+    "pipewire-jack",
     
     # Bluetooth
     "bluez",
@@ -67,16 +77,13 @@ SYSTEM_PACKAGES = [
     # Fonts
     "ttf-jetbrains-mono-nerd",
     "ttf-roboto",
-    "ttf-font-awesome",
+    "woff2-font-awesome",
     "noto-fonts",
     "noto-fonts-emoji",
     
     # Graphics (AMD)
     "mesa",
-    "lib32-mesa",
     "vulkan-radeon",
-    "lib32-vulkan-radeon",
-    "libva-mesa-driver",
     
     # Utilities
     "ripgrep",
@@ -94,83 +101,30 @@ SYSTEM_PACKAGES = [
     "yazi",
     
     # Media
-    "mpv",
     "ffmpeg",
     
-    # Development
-    "cmake",
-    "ninja",
-    "clang",
-    "pkg-config",
-    "python",
-    "python-pip",
+    # Dotfiles manager
+    "stow",
     
     # Secrets
-    "sops",
-    "age",
-    
-    # Chezmoi
-    "chezmoi",
-    
-    # Notifications
-    "libnotify",
-    
-    # Misc
-    "curl",
-    "wget",
-    "inotify-tools",
+    "bitwarden-cli",
+
+    "discord",
 ]
 
 # AUR packages (paru)
 AUR_PACKAGES = [
-    # Prompt
     "oh-my-posh-bin",
-    
-    # Browser
+
     "zen-browser-bin",
-    
-    # Communication
-    "discord",
-    "slack-desktop",
-    
-    # Development
-    "devbox-bin",
-    
-    # Database
-    "beekeeper-studio-bin",
-    
-    # API Client
-    "bruno-bin",
-    
-    # Theming
-    "rose-pine-cursor",
-    
-    # Navigation
-    "zoxide-bin",
+
+    "opencode-bin",
 ]
 
 # Packages to explicitly ignore during orphan removal
 # These might be pulled in as optional deps but we want to keep them
 KEEP_PACKAGES = [
-    "lib32-mesa",
-    "lib32-vulkan-radeon",
+    "linux",
+    "linux-firmware",
+    "sudo",
 ]
-
-# Package groups - can be used with `ax sync --group gaming`
-GROUPS = {
-    "gaming": [
-        "steam",
-        "gamescope",
-        "mangohud",
-        "lib32-mangohud",
-        "gamemode",
-        "lib32-gamemode",
-    ],
-    "gaming-aur": [
-        "protonup-qt",
-    ],
-    "docker": [
-        "docker",
-        "docker-compose",
-    ],
-}

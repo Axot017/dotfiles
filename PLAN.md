@@ -10,6 +10,21 @@ This file tracks remaining work after the minimal setup is complete.
 
 ---
 
+## Setup & Infrastructure
+
+- [x] Automated setup script (`setup.sh`)
+  - [x] paru installation
+  - [x] Snapper configuration
+  - [x] grub-btrfs for snapshot boot entries
+  - [x] Chezmoi dotfiles application
+  - [x] ax tool installation
+  - [x] Service enablement
+  - [x] SOPS age key generation
+- [x] Simplified README with quick start guide
+- [x] AGENTS.md for coding agents
+
+---
+
 ## Core System
 
 ### Neovim - Deferred Plugins
@@ -179,9 +194,9 @@ This file tracks remaining work after the minimal setup is complete.
 
 ## Documentation
 
-- [ ] Document keybindings cheatsheet
-- [ ] Document ax tool usage
-- [ ] Add troubleshooting section to README
+- [x] Document keybindings cheatsheet (in README)
+- [x] Document ax tool usage (in README)
+- [x] Add troubleshooting section to README
 - [ ] Screenshots of the setup
 
 ---

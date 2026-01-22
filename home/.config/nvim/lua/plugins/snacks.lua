@@ -1,5 +1,3 @@
--- Snacks.nvim - utility collection
-
 return {
   {
     "folke/snacks.nvim",

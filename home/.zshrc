@@ -54,13 +54,14 @@ autoload -Uz zmv
 
 # Named directories
 hash -d proj=~/Projects
-hash -d dotfiles=~/Projects/dotfiles
+hash -d dotfiles=~/.dotfiles
 hash -d dl=~/Downloads
 
 # Environment
 export EDITOR="nvim"
 export SUDO_EDITOR="nvim"
 export PATH="$HOME/.local/bin:$PATH"
+export PATH="$HOME/.config/bin:$PATH"
 
 # fzf integration
 if command -v fzf &> /dev/null; then
@@ -82,16 +83,6 @@ if command -v direnv &> /dev/null; then
     eval "$(direnv hook zsh)"
 fi
 
-# Syntax highlighting (must be at end)
-if [ -f /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]; then
-    source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-fi
-
-# Auto suggestions
-if [ -f /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh ]; then
-    source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
-fi
-
 # Useful aliases
 alias ls='ls --color=auto'
 alias ll='ls -la'
@@ -108,3 +99,13 @@ alias gc='git commit'
 alias gp='git push'
 alias gl='git log --oneline'
 alias gd='git diff'
+
+# Auto suggestions
+if [ -f /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh ]; then
+    source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+fi
+
+# Syntax highlighting (must be at end)
+if [ -f /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]; then
+    source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+fi

@@ -1,7 +1,4 @@
--- Completion plugins: blink.cmp, copilot
-
 return {
-  -- Blink completion
   {
     "saghen/blink.cmp",
     dependencies = "rafamadriz/friendly-snippets",
@@ -31,8 +28,6 @@ return {
     },
     opts_extend = { "sources.default" },
   },
-
-  -- GitHub Copilot
   {
     "zbirenbaum/copilot.lua",
     cmd = "Copilot",

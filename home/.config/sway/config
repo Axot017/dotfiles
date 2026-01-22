@@ -15,7 +15,7 @@ set $right l
 #
 # Output configuration
 #
-output * bg ~/Projects/dotfiles/nix-config/wallpapers/witcher.jpg fill
+output "*" bg ~/.config/wallpapers/witcher.jpg fill
 
 #
 # Input configuration
@@ -63,9 +63,6 @@ exec_always {
 }
 
 exec {
-    # Status bar
-    waybar
-    
     # Notification daemon
     swaync
 }
@@ -83,7 +80,7 @@ bindsym $mod+space exec $menu
 bindsym $mod+q kill
 
 # Clipboard history
-bindsym $mod+v exec cliphist list | rofi -dmenu | cliphist decode | wl-copy
+bindsym $mod+Shift+v exec cliphist list | rofi -dmenu | cliphist decode | wl-copy
 
 # Power menu
 bindsym $mod+p exec rofi -show power-menu -modi "power-menu:~/.config/rofi/scripts/power-menu"
@@ -145,7 +142,7 @@ bindsym $mod+Shift+f floating toggle
 
 # Split orientation
 bindsym $mod+b splith
-bindsym $mod+Shift+v splitv
+bindsym $mod+v splitv
 
 # Layout toggle
 bindsym $mod+e layout toggle split tabbed stacking

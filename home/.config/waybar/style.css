@@ -32,6 +32,7 @@ window#waybar {
 
 /* Left modules - workspaces and window title */
 #workspaces {
+  margin-right: 12px;
   padding-left: 12px;
   border-top-left-radius: 8px;
   border-bottom-left-radius: 32px;
@@ -58,7 +59,7 @@ window#waybar {
 }
 
 #window {
-  margin-left: 4px;
+  margin-left: 12px;
   border-top-right-radius: 8px;
   border-bottom-right-radius: 32px;
   border-top-left-radius: 8px;

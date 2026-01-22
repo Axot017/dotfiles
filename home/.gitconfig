@@ -1,0 +1,39 @@
+[user]
+    name = Mateusz Ledwoń
+    email = mateuszledwon@duck.com
+
+[url "git@github.com:"]
+    insteadOf = https://github.com/
+
+[init]
+    defaultBranch = main
+
+[core]
+    editor = nvim
+
+[pull]
+    rebase = true
+
+[push]
+    autoSetupRemote = true
+
+[fetch]
+    prune = true
+
+[rerere]
+    enabled = true
+
+[diff]
+    algorithm = histogram
+
+[merge]
+    conflictStyle = zdiff3
+
+[alias]
+    co = checkout
+    br = branch
+    st = status
+    ci = commit
+    unstage = reset HEAD --
+    last = log -1 HEAD
+    lg = log --oneline --graph --decorate
