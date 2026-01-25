@@ -61,7 +61,6 @@ hash -d dl=~/Downloads
 export EDITOR="nvim"
 export SUDO_EDITOR="nvim"
 export PATH="$HOME/.local/bin:$PATH"
-export PATH="$HOME/.config/bin:$PATH"
 
 # fzf integration
 if command -v fzf &> /dev/null; then

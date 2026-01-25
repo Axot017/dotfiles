@@ -104,7 +104,7 @@ fi
 # 8. Sync packages with ax
 # =============================================================================
 info "Syncing packages..."
-export PATH="$HOME/.config/bin:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
 ax sync
 
 # =============================================================================
