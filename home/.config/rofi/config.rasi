@@ -1,120 +1,180 @@
 /* Rofi configuration - Tokyo Night theme */
 /* Matching your NixOS rofi.nix config */
 
+
 configuration {
-    modi: "drun,run,window";
-    show-icons: true;
-    icon-theme: "Papirus-Dark";
-    terminal: "ghostty";
-    drun-display-format: "{name}";
-    location: 0;
-    disable-history: false;
-    hide-scrollbar: true;
-    display-drun: "   Apps ";
-    display-run: "   Run ";
-    display-window: "   Window ";
-    sidebar-mode: true;
+    lines:							10;
+    columns:						2;
+    font: 							"JetBrainsMonoNL Nerd Font Mono 12";
+    bw: 							0;
+    location: 						0;
+    padding: 						0;
+    fixed-num-lines: 				true;
+    show-icons: 					false;
+    sidebar-mode: 					true;
+    separator-style: 				"none";
+    hide-scrollbar: 				true;
+    fullscreen: 					false;
+    fake-transparency: 				false;
+    scroll-method: 					1;
+    window-format: 					"[{w}] ··· {c} ···   {t}";
+    click-to-exit: 					true;
+    show-match: 					false;
+    combi-hide-mode-prefix: 		false;
+    display-window: 				"";
+    display-windowcd: 				"";
+    display-run: 					"";
+    display-ssh: 					"";
+    display-drun: 					"";
+    display-combi: 					"";
 }
 
-/* Custom Tokyo Night styling */
 * {
-    bg0:    #212121F2;
-    bg1:    #2A2A2A;
-    bg2:    #3D3D3D80;
-    bg3:    #AB47BCF2;
-    fg0:    #E6E6E6;
-    fg1:    #FFFFFF;
-    fg2:    #969696;
-    fg3:    #3D3D3D;
-}
-
-* {
-    background-color:   transparent;
-    text-color:         @fg0;
-
-    margin:     0px;
-    padding:    0px;
-    spacing:    0px;
+    al:      #00000000;
+    bg:      #24334Aff;
+    se:      #29384Fff;
+    fg:      #FEFFF1ff;
+    ac:      #3A6081ff;
+    red:     #EC7875ff;
+    green:   #61C766ff;
+    yellow:  #FDD835ff;
+    blue:    #42A5F5ff;
+    purple:  #BA68C8ff;
+    cyan:    #4DD0E1ff;
+    background-color:             	@bg;
 }
 
 window {
-    location:       north;
-    y-offset:       calc(50% - 176px);
-    width:          480;
-    border-radius:  24px;
-
-    background-color:   @bg0;
-}
-
-mainbox {
-    padding:    12px;
-}
-
-inputbar {
-    background-color:   @bg1;
-    border-color:       @bg3;
-
-    border:         2px;
-    border-radius:  16px;
-
-    padding:    8px 16px;
-    spacing:    8px;
-    children:   [ prompt, entry ];
+    border: 						0px;
+    border-color: 					@ac;
+    border-radius: 					12px;
+    padding: 						40;
+    width: 							50%;
+    height: 						50%;
 }
 
 prompt {
-    text-color: @fg2;
+    spacing: 						0;
+    border: 						0;
+    text-color: 					@fg;
+}
+
+textbox-prompt-colon {
+    expand: 						false;
+    str: 							" ";
+    margin:							0px 4px 0px 0px;
+    text-color: 					inherit;
 }
 
 entry {
-    placeholder:        "Search";
-    placeholder-color:  @fg3;
+    spacing:    					0;
+    text-color: 					@fg;
 }
 
-message {
-    margin:             12px 0 0;
-    border-radius:      16px;
-    border-color:       @bg2;
-    background-color:   @bg2;
+case-indicator {
+    spacing:    					0;
+    text-color: 					@fg;
 }
 
-textbox {
-    padding:    8px 24px;
+inputbar {
+    spacing:    					0px;
+    text-color: 					@fg;
+    padding:    					1px;
+    children: 						[ prompt,textbox-prompt-colon,entry,case-indicator ];
+}
+
+mainbox {
+    border: 						0px;
+    border-color: 					@ac;
+    padding: 						6;
 }
 
 listview {
-    background-color:   transparent;
-
-    margin:     12px 0 0;
-    lines:      8;
-    columns:    1;
-
-    fixed-height: false;
+    fixed-height: 					0;
+    border: 						0px;
+    border-color: 					@ac;
+    spacing: 						4px;
+    scrollbar: 						false;
+    padding: 						4px 0px 0px;
 }
 
 element {
-    padding:        8px 16px;
-    spacing:        8px;
-    border-radius:  16px;
+    border: 						0px;
+    padding: 						1px;
+}
+element normal.normal {
+    background-color: 				@bg;
+    text-color:       				@fg;
+}
+element normal.urgent {
+    background-color: 				@bg;
+    text-color:       				@red;
+}
+element normal.active {
+    background-color: 				@bg;
+    text-color:       				@green;
+}
+element selected.normal {
+    background-color: 				@bg;
+    text-color:       				@ac;
+}
+element selected.urgent {
+    background-color: 				@bg;
+    text-color:       				@red;
+}
+element selected.active {
+    background-color: 				@bg;
+    text-color:       				@ac;
+}
+element alternate.normal {
+    background-color: 				@bg;
+    text-color:       				@fg;
+}
+element alternate.urgent {
+    background-color: 				@bg;
+    text-color:       				@fg;
+}
+element alternate.active {
+    background-color: 				@bg;
+    text-color:       				@fg;
 }
 
-element normal active {
-    text-color: @bg3;
+sidebar {
+    border:       					0px;
+    border-color: 					@ac;
+    border-radius: 					20px;
 }
 
-element alternate active {
-    text-color: @bg3;
+button {
+    margin: 						5px;
+    padding: 						5px;
+    text-color: 					@fg;
+    border: 						0px;
+    border-radius: 					20px;
+    border-color: 					@fg;
 }
 
-element selected normal, element selected active {
-    background-color:   @bg3;
+button selected {
+    text-color: 					@fg;
+    border: 						3px;
+    border-radius: 					20px;
+    border-color: 					@ac;
 }
 
-element-icon {
-    size:           1em;
-    vertical-align: 0.5;
+scrollbar {
+    width:        					4px;
+    border:       					0px;
+    handle-color: 					@fg;
+    handle-width: 					8px;
+    padding:      					0;
 }
 
-element-text {
-    text-color: inherit;
+message {
+    border: 						0px;
+    border-color: 					@ac;
+    padding: 						1px;
+}
+
+textbox {
+    text-color: 					@fg;
 }
