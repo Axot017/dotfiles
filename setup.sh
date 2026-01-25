@@ -15,6 +15,17 @@ NC='\033[0m' # No Color
 info() { echo -e "${GREEN}[INFO]${NC} $1"; }
 warn() { echo -e "${YELLOW}[WARN]${NC} $1"; }
 
+bw_auth() {
+    if [[ -z "${BW_SESSION:-}" ]]; then
+        if ! bw login --check &> /dev/null; then
+            BW_SESSION=$(bw login --raw < /dev/tty)
+        else
+            BW_SESSION=$(bw unlock --raw < /dev/tty)
+        fi
+        export BW_SESSION
+    fi
+}
+
 # Verify we're on Arch
 if [[ ! -f /etc/arch-release ]]; then
     echo "This script is for Arch Linux only"
@@ -121,15 +132,10 @@ if [[ -f "$SSH_PRIVATE" ]]; then
     info "SSH keys already exist, skipping Bitwarden import"
 else
     info "Importing SSH keys from Bitwarden..."
-    
+
     # Login to Bitwarden (will prompt for credentials)
     # Use /dev/tty to ensure interactive input works inside scripts
-    if ! bw login --check &> /dev/null; then
-        BW_SESSION=$(bw login --raw < /dev/tty)
-    else
-        BW_SESSION=$(bw unlock --raw < /dev/tty)
-    fi
-    export BW_SESSION
+    bw_auth
     
     # Get the SSH key item
     SSH_ITEM=$(bw get item "GitHub SSH")
@@ -142,22 +148,75 @@ else
     chmod 600 "$SSH_PRIVATE"
     chmod 644 "$SSH_PUBLIC"
 
-    AGE_KEY_ITEM=$(bw get item "Homelab - age key")
-
-    mkdir -p "$HOME/.config/age"
-
-    echo "$AGE_KEY_ITEM" | jq -r '.notes' > "$HOME/.config/age/keys.txt"
-
-    chmod 600 "$HOME/.config/age/keys.txt"
-    
-    # Lock vault
-    bw lock
-    
     info "SSH keys imported successfully"
 fi
 
 # =============================================================================
-# 10. Enable system services
+# 10. Import age key from Bitwarden
+# =============================================================================
+AGE_KEY_FILE="$HOME/.config/age/keys.txt"
+
+if [[ -f "$AGE_KEY_FILE" ]]; then
+    info "age key already exists, skipping Bitwarden import"
+else
+    info "Importing age key from Bitwarden..."
+
+    bw_auth
+
+    AGE_KEY_ITEM=$(bw get item "Homelab - age key")
+
+    mkdir -p "$HOME/.config/age"
+
+    echo "$AGE_KEY_ITEM" | jq -r '.notes' > "$AGE_KEY_FILE"
+
+    chmod 600 "$AGE_KEY_FILE"
+
+    info "age key imported successfully"
+fi
+
+# =============================================================================
+# 11. Import OpenWeather API key from Bitwarden
+# =============================================================================
+WEATHER_SECRETS_DIR="$HOME/.config/sops"
+WEATHER_SECRETS_FILE="$WEATHER_SECRETS_DIR/secrets.yaml"
+
+if [[ -f "$WEATHER_SECRETS_FILE" ]] && grep -q '^openweather_api_key:' "$WEATHER_SECRETS_FILE"; then
+    info "OpenWeather API key already set, skipping Bitwarden import"
+else
+    info "Importing OpenWeather API key from Bitwarden..."
+
+    bw_auth
+
+    WEATHER_ITEM=$(bw get item "OpenWeather API key")
+    WEATHER_API_KEY=$(echo "$WEATHER_ITEM" | jq -r '.notes')
+
+    if [[ -z "$WEATHER_API_KEY" ]]; then
+        warn "OpenWeather API key is empty, skipping write"
+    else
+        mkdir -p "$WEATHER_SECRETS_DIR"
+
+        if [[ -f "$WEATHER_SECRETS_FILE" ]]; then
+            awk -v key="$WEATHER_API_KEY" 'BEGIN{updated=0} /^openweather_api_key:/{print "openweather_api_key: " key; updated=1; next} {print} END{if (!updated) print "openweather_api_key: " key}' "$WEATHER_SECRETS_FILE" > "$WEATHER_SECRETS_FILE.tmp"
+            mv "$WEATHER_SECRETS_FILE.tmp" "$WEATHER_SECRETS_FILE"
+        else
+            printf "openweather_api_key: %s\n" "$WEATHER_API_KEY" > "$WEATHER_SECRETS_FILE"
+        fi
+
+        chmod 600 "$WEATHER_SECRETS_FILE"
+
+        info "OpenWeather API key imported successfully"
+    fi
+fi
+
+# =============================================================================
+# 12. Lock Bitwarden
+# =============================================================================
+if [[ -n "${BW_SESSION:-}" ]]; then
+    bw lock
+fi
+
+# =============================================================================
+# 13. Enable system services
 # =============================================================================
 info "Enabling services..."
 
@@ -177,7 +236,7 @@ if ! systemctl is-enabled NetworkManager &> /dev/null 2>&1; then
 fi
 
 # =============================================================================
-# 11. Create common directories
+# 14. Create common directories
 # =============================================================================
 mkdir -p "$HOME/Pictures/Screenshots"
 mkdir -p "$HOME/Videos/ScreenRecordings"
