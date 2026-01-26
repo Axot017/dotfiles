@@ -76,6 +76,8 @@ bindsym $mod+t exec $term
 # Application launcher
 bindsym $mod+space exec $menu
 
+focus_follows_mouse no
+
 # Kill focused window
 bindsym $mod+q kill
 

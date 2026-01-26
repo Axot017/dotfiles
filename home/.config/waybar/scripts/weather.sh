@@ -1,16 +1,16 @@
 #!/bin/bash
 # Weather script for waybar using OpenWeatherMap API
-# Requires: curl, jq, sops
+# Requires: curl, jq
 
 # Location: Katowice, Poland
 LAT="50.281760"
 LON="18.997510"
 
-# Get API key from sops-encrypted secrets
-SECRETS_FILE="$HOME/.config/sops/secrets.yaml"
+# Get API key from plain secrets file
+SECRETS_FILE="$HOME/.secrets/openweather_api_key.txt"
 
 if [ -f "$SECRETS_FILE" ]; then
-    API_KEY=$(sops -d "$SECRETS_FILE" 2>/dev/null | grep "openweather_api_key:" | awk '{print $2}')
+    API_KEY=$(cat "$SECRETS_FILE")
 fi
 
 if [ -z "$API_KEY" ]; then

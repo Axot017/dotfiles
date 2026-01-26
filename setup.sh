@@ -177,10 +177,10 @@ fi
 # =============================================================================
 # 11. Import OpenWeather API key from Bitwarden
 # =============================================================================
-WEATHER_SECRETS_DIR="$HOME/.config/sops"
-WEATHER_SECRETS_FILE="$WEATHER_SECRETS_DIR/secrets.yaml"
+WEATHER_SECRETS_DIR="$HOME/.secrets"
+WEATHER_SECRETS_FILE="$WEATHER_SECRETS_DIR/openweather_api_key.txt"
 
-if [[ -f "$WEATHER_SECRETS_FILE" ]] && grep -q '^openweather_api_key:' "$WEATHER_SECRETS_FILE"; then
+if [[ -f "$WEATHER_SECRETS_FILE" ]] && [[ -s "$WEATHER_SECRETS_FILE" ]]; then
     info "OpenWeather API key already set, skipping Bitwarden import"
 else
     info "Importing OpenWeather API key from Bitwarden..."
@@ -195,12 +195,7 @@ else
     else
         mkdir -p "$WEATHER_SECRETS_DIR"
 
-        if [[ -f "$WEATHER_SECRETS_FILE" ]]; then
-            awk -v key="$WEATHER_API_KEY" 'BEGIN{updated=0} /^openweather_api_key:/{print "openweather_api_key: " key; updated=1; next} {print} END{if (!updated) print "openweather_api_key: " key}' "$WEATHER_SECRETS_FILE" > "$WEATHER_SECRETS_FILE.tmp"
-            mv "$WEATHER_SECRETS_FILE.tmp" "$WEATHER_SECRETS_FILE"
-        else
-            printf "openweather_api_key: %s\n" "$WEATHER_API_KEY" > "$WEATHER_SECRETS_FILE"
-        fi
+        printf "%s\n" "$WEATHER_API_KEY" > "$WEATHER_SECRETS_FILE"
 
         chmod 600 "$WEATHER_SECRETS_FILE"
 
