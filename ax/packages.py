@@ -113,6 +113,8 @@ SYSTEM_PACKAGES = [
     "bitwarden-cli",
 
     "discord",
+
+    "mise",
 ]
 
 # AUR packages (paru)

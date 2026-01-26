@@ -266,7 +266,6 @@ def main():
 Examples:
     ax sync              # Sync packages with packages.py
     ax sync --dry-run    # Show what would be done
-    ax sync -g gaming    # Sync with gaming group
     ax edit              # Edit dotfiles workflow
     ax list              # List package status
     ax check             # Check sync status
