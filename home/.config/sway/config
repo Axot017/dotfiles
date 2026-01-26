@@ -15,7 +15,7 @@ set $right l
 #
 # Output configuration
 #
-output "*" bg ~/.config/wallpapers/witcher.jpg fill
+output "*" bg ~/.local/shared/wallpapers/witcher.jpg fill
 
 #
 # Input configuration

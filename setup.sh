@@ -89,11 +89,11 @@ fi
 if [[ ! -d "$HOME/.config/sway" ]]; then
     info "Applying dotfiles with stow..."
     cd "$DOTFILES_DIR"
-    stow -v -t ~ home
+    stow --no-folding -v -t ~ home
 else
     info "Dotfiles already applied (restowing...)"
     cd "$DOTFILES_DIR"
-    stow -R -t ~ home
+    stow --no-folding -R -t ~ home
 fi
 
 # =============================================================================
