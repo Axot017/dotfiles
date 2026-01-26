@@ -211,7 +211,35 @@ if [[ -n "${BW_SESSION:-}" ]]; then
 fi
 
 # =============================================================================
-# 13. Enable system services
+# 13. Install and configure SDDM theme
+# =============================================================================
+SDDM_THEME_ID="where-is-my-sddm-theme"
+SDDM_THEME_SRC="$DOTFILES_DIR/sddm-theme"
+SDDM_THEME_DIR="/usr/share/sddm/themes/$SDDM_THEME_ID"
+SDDM_THEME_CONF_DIR="/etc/sddm.conf.d"
+SDDM_THEME_CONF_FILE="$SDDM_THEME_CONF_DIR/theme.conf"
+
+if [[ -d "$SDDM_THEME_SRC" ]]; then
+    info "Installing SDDM theme..."
+    sudo mkdir -p "$SDDM_THEME_DIR"
+    sudo cp -r "$SDDM_THEME_SRC"/. "$SDDM_THEME_DIR"/
+
+    info "Configuring SDDM theme..."
+    sudo mkdir -p "$SDDM_THEME_CONF_DIR"
+    if [[ -f "$SDDM_THEME_CONF_FILE" ]] && grep -q "Current=$SDDM_THEME_ID" "$SDDM_THEME_CONF_FILE"; then
+        info "SDDM theme already set"
+    else
+        sudo tee "$SDDM_THEME_CONF_FILE" > /dev/null <<EOF
+[Theme]
+Current=$SDDM_THEME_ID
+EOF
+    fi
+else
+    warn "SDDM theme source not found at $SDDM_THEME_SRC"
+fi
+
+# =============================================================================
+# 14. Enable system services
 # =============================================================================
 info "Enabling services..."
 
@@ -231,7 +259,7 @@ if ! systemctl is-enabled NetworkManager &> /dev/null 2>&1; then
 fi
 
 # =============================================================================
-# 14. Create common directories
+# 15. Create common directories
 # =============================================================================
 mkdir -p "$HOME/Pictures/Screenshots"
 mkdir -p "$HOME/Videos/ScreenRecordings"
