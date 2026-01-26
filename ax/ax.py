@@ -115,6 +115,8 @@ def sync_packages(dry_run: bool = False) -> bool:
     # Only consider explicit packages for removal (not dependencies)
     all_targets = target_system | target_aur
     to_remove = (explicit - all_targets) - set(KEEP_PACKAGES)
+
+    print("To remove", to_remove)
     
     # Filter out packages that are dependencies
     if to_remove:
