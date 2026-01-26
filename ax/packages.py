@@ -8,12 +8,14 @@ The ax tool reads these lists and ensures the system matches this state.
 # Core system packages (pacman)
 SYSTEM_PACKAGES = [
     # Base
+    "base",
     "base-devel",
     "git",
     "wpa_supplicant",
     "curl",
     "wget",
     "inotify-tools",
+    "zram-generator",
 
     "neovim",
     "tree-sitter-cli",
@@ -126,6 +128,9 @@ AUR_PACKAGES = [
 # These might be pulled in as optional deps but we want to keep them
 KEEP_PACKAGES = [
     "linux",
+    "amd-ucode",
     "linux-firmware",
     "sudo",
+    "paru",
+    "paru-debug",
 ]

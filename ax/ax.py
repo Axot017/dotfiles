@@ -81,12 +81,11 @@ def remove_packages(packages: list[str]) -> bool:
     """Remove packages using pacman."""
     if not packages:
         return True
-    
-    # Filter out packages we want to keep
+
     packages = [p for p in packages if p not in KEEP_PACKAGES]
     if not packages:
         return True
-    
+
     try:
         run_sudo(["pacman", "-Rns", "--noconfirm"] + packages)
         return True
@@ -103,7 +102,6 @@ def sync_packages(dry_run: bool = False) -> bool:
 
     # Get current state
     all_installed = get_all_packages()          # All packages (for install check)
-    explicit = get_explicit_packages()          # Explicit only (for removal check)
     installed_aur = get_aur_packages()
     installed_official = all_installed - installed_aur
     
@@ -111,54 +109,58 @@ def sync_packages(dry_run: bool = False) -> bool:
     to_install_system = target_system - installed_official
     to_install_aur = target_aur - installed_aur
     
-    # Packages to remove: explicit packages not in any target list
-    # Only consider explicit packages for removal (not dependencies)
     all_targets = target_system | target_aur
-    to_remove = (explicit - all_targets) - set(KEEP_PACKAGES)
-
-    print("To remove", to_remove)
-    
-    # Filter out packages that are dependencies
-    if to_remove:
-        # Check which packages are required by others
-        result = run(["pacman", "-Qtq"], capture=True, check=False)
-        required = set(result.stdout.strip().split("\n")) if result.stdout.strip() else set()
-        to_remove = to_remove - required
+    orphaned = set()
+    removal_candidates = set()
     
     if dry_run:
+        result = run(["pacman", "-Qtq"], capture=True, check=False)
+        orphaned = set(result.stdout.strip().split("\n")) if result.stdout.strip() else set()
+        removal_candidates = (orphaned - all_targets) - set(KEEP_PACKAGES)
+
         print("=== Dry Run ===")
         if to_install_system:
             print(f"\nWould install (pacman): {', '.join(sorted(to_install_system))}")
         if to_install_aur:
             print(f"\nWould install (AUR): {', '.join(sorted(to_install_aur))}")
-        if to_remove:
-            print(f"\nWould remove: {', '.join(sorted(to_remove))}")
-        if not (to_install_system or to_install_aur or to_remove):
+        if removal_candidates:
+            print(f"\nWould remove (first pass): {', '.join(sorted(removal_candidates))}")
+        if not (to_install_system or to_install_aur or removal_candidates):
             print("\nSystem is in sync!")
         return True
     
     success = True
+    did_work = False
 
-    # Remove orphaned packages
-    if to_remove:
-        print(f"\nRemoving packages: {', '.join(sorted(to_remove))}")
-        if not remove_packages(list(to_remove)):
-            success = False
-    
     # Install system packages
     if to_install_system:
         print(f"\nInstalling system packages: {', '.join(sorted(to_install_system))}")
         if not install_packages(list(to_install_system), aur=False):
             success = False
+        did_work = True
     
     # Install AUR packages
     if to_install_aur:
         print(f"\nInstalling AUR packages: {', '.join(sorted(to_install_aur))}")
         if not install_packages(list(to_install_aur), aur=True):
             success = False
+        did_work = True
+
+    # Remove unrequired packages not in targets
+    while True:
+        result = run(["pacman", "-Qtq"], capture=True, check=False)
+        orphaned = set(result.stdout.strip().split("\n")) if result.stdout.strip() else set()
+        removal_candidates = (orphaned - all_targets) - set(KEEP_PACKAGES)
+        if not removal_candidates:
+            break
+        print(f"\nRemoving packages: {', '.join(sorted(removal_candidates))}")
+        if not remove_packages(list(removal_candidates)):
+            success = False
+            break
+        did_work = True
     
     
-    if success and not (to_install_system or to_install_aur or to_remove):
+    if success and not did_work:
         print("System is already in sync!")
     
     return success
@@ -218,7 +220,6 @@ def cmd_edit(args):
 def cmd_list(args):
     """Handle list command."""
     all_installed = get_all_packages()
-    explicit = get_explicit_packages()
     installed_aur = get_aur_packages()
     installed_official = all_installed - installed_aur
     
@@ -231,11 +232,11 @@ def cmd_list(args):
     print("Declared (official):", len(target_system))
     print("Declared (AUR):", len(target_aur))
     print("Installed (all):", len(all_installed))
-    print("Installed (explicit):", len(explicit))
     print("Installed (AUR):", len(installed_aur))
     
     missing_system = target_system - installed_official
     missing_aur = target_aur - installed_aur
+    explicit = get_explicit_packages()
     extra = (explicit - all_targets) - set(KEEP_PACKAGES)
     
     if missing_system:
