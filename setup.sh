@@ -154,7 +154,7 @@ fi
 # =============================================================================
 # 10. Import age key from Bitwarden
 # =============================================================================
-AGE_KEY_FILE="$HOME/.config/age/keys.txt"
+AGE_KEY_FILE="$HOME/.config/sops/age/keys.txt"
 
 if [[ -f "$AGE_KEY_FILE" ]]; then
     info "age key already exists, skipping Bitwarden import"
@@ -165,7 +165,7 @@ else
 
     AGE_KEY_ITEM=$(bw get item "Homelab - age key")
 
-    mkdir -p "$HOME/.config/age"
+    mkdir -p "$HOME/.config/sops/age"
 
     echo "$AGE_KEY_ITEM" | jq -r '.notes' > "$AGE_KEY_FILE"
 
