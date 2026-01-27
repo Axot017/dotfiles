@@ -77,11 +77,6 @@ if command -v oh-my-posh &> /dev/null; then
     eval "$(oh-my-posh init zsh --config ~/.config/oh-my-posh/config.json)"
 fi
 
-# direnv integration
-if command -v direnv &> /dev/null; then
-    eval "$(direnv hook zsh)"
-fi
-
 # Useful aliases
 alias ls='ls --color=auto'
 alias ll='ls -la'
