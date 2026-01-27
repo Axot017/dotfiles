@@ -99,6 +99,8 @@ alias gp='git push'
 alias gl='git log --oneline'
 alias gd='git diff'
 
+echo 'eval "$(mise activate zsh)"' >> ~/.zshrc
+
 # Auto suggestions
 if [ -f /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh ]; then
     source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
