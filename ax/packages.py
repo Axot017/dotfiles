@@ -115,6 +115,8 @@ SYSTEM_PACKAGES = [
     "discord",
 
     "mise",
+
+    "aws-cli-v2",
 ]
 
 # AUR packages (paru)
