@@ -80,6 +80,7 @@ SYSTEM_PACKAGES = [
     # Fonts
     "ttf-jetbrains-mono-nerd",
     "ttf-roboto",
+    "adobe-source-sans-fonts",
     "woff2-font-awesome",
     "otf-font-awesome",
     "noto-fonts",
