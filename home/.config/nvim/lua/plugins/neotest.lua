@@ -4,8 +4,8 @@ return {
     "nvim-neotest/nvim-nio",
     "nvim-lua/plenary.nvim",
     "nvim-treesitter/nvim-treesitter",
-    "nvim-neotest/neotest-golang",
-    "nvim-neotest/neotest-elixir",
+    "fredrikaverpil/neotest-golang",
+    "jfpedroza/neotest-elixir",
   },
   opts = function()
     return {
