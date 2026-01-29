@@ -81,6 +81,7 @@ SYSTEM_PACKAGES = [
     "ttf-jetbrains-mono-nerd",
     "ttf-roboto",
     "woff2-font-awesome",
+    "otf-font-awesome",
     "noto-fonts",
     "noto-fonts-emoji",
     
