@@ -51,14 +51,14 @@
           "template": "({{ .HEAD}})",
           "properties": {
             "fetch_status": true,
-            "branch_icon": " "
+            "branch_icon": " "
           }
         },
         {
           "type": "status",
           "style": "plain",
           "foreground": "p:terminal-red",
-          "template": " "
+          "template": " "
         }
       ],
       "type": "prompt"
