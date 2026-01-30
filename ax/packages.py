@@ -119,6 +119,7 @@ SYSTEM_PACKAGES = [
     "mise",
 
     "steam",
+    "xorg-xwayland",
 ]
 
 # AUR packages (paru)
