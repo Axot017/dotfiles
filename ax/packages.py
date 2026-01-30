@@ -120,6 +120,8 @@ SYSTEM_PACKAGES = [
 
     "steam",
     "xorg-xwayland",
+
+    "docker",
 ]
 
 # AUR packages (paru)
