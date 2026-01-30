@@ -119,6 +119,7 @@ SYSTEM_PACKAGES = [
     "mise",
 
     "aws-cli-v2",
+    "steam",
 ]
 
 # AUR packages (paru)
