@@ -124,6 +124,7 @@ SYSTEM_PACKAGES = [
     "docker",
     "docker-compose",
     "podman",
+    "podman-compose",
 ]
 
 # AUR packages (paru)
