@@ -1,6 +1,6 @@
 return {
   "nvim-treesitter/nvim-treesitter-context",
-  branch = "main",
+  branch = "master",
   event = "VeryLazy",
   dependencies = {
     "nvim-treesitter/nvim-treesitter",
