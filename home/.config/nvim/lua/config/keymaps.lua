@@ -69,3 +69,54 @@ map("n", "[d", function() vim.diagnostic.jump({ count = -1, float = true }) end,
 
 -- Terminal mode
 map("t", "<esc><esc>", "<C-\\><C-n>", { silent = true, desc = "Exit terminal mode" })
+
+-- Multiterm
+map("n", "<leader>tt", function()
+  local ok, multiterm = pcall(require, "multiterm")
+  if ok then
+    multiterm.bind_toggle()
+  end
+end, { silent = true, desc = "Terminal toggle" })
+
+map("n", "<leader>tq", function()
+  local ok, multiterm = pcall(require, "multiterm")
+  if ok then
+    multiterm.close_active()
+  end
+end, { silent = true, desc = "Terminal close" })
+
+map("n", "<leader>tr", function()
+  local ok, multiterm = pcall(require, "multiterm")
+  if ok then
+    multiterm.bind_remove()
+  end
+end, { silent = true, desc = "Terminal remove" })
+
+-- Opencode
+map({ "n", "x" }, "<leader>os", function()
+  local ok, opencode = pcall(require, "opencode")
+  if ok then
+    opencode.ask("@this: ", { submit = true })
+  end
+end, { desc = "Ask opencode" })
+
+map({ "n", "x" }, "<leader>ox", function()
+  local ok, opencode = pcall(require, "opencode")
+  if ok then
+    opencode.select()
+  end
+end, { desc = "Execute opencode action" })
+
+map({ "n", "x" }, "<leader>oa", function()
+  local ok, opencode = pcall(require, "opencode")
+  if ok then
+    opencode.prompt("@this")
+  end
+end, { desc = "Add to opencode" })
+
+map({ "n", "t" }, "<leader>ot", function()
+  local ok, opencode = pcall(require, "opencode")
+  if ok then
+    opencode.toggle()
+  end
+end, { desc = "Toggle opencode" })
