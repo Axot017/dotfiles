@@ -122,6 +122,7 @@ SYSTEM_PACKAGES = [
     "xorg-xwayland",
 
     "docker",
+    "podman",
 ]
 
 # AUR packages (paru)
