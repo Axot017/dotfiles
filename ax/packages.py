@@ -126,7 +126,7 @@ SYSTEM_PACKAGES = [
     "podman",
     "podman-compose",
 
-    "ffmpg",
+    "ffmpeg",
 ]
 
 # AUR packages (paru)
