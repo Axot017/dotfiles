@@ -129,6 +129,8 @@ SYSTEM_PACKAGES = [
     "ffmpeg",
 
     "openrazer-daemon",
+    "linux-headers",
+
 ]
 
 # AUR packages (paru)
