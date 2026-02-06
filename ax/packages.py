@@ -138,6 +138,7 @@ AUR_PACKAGES = [
     "zen-browser-bin",
 
     "opencode-bin",
+    "razergenie",
 ]
 
 # Packages to explicitly ignore during orphan removal
