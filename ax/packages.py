@@ -127,6 +127,8 @@ SYSTEM_PACKAGES = [
     "podman-compose",
 
     "ffmpeg",
+
+    "openrazer-daemon",
 ]
 
 # AUR packages (paru)
