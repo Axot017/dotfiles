@@ -40,6 +40,7 @@ SYSTEM_PACKAGES = [
     
     # Terminal
     "ghostty",
+    "tmux",
     
     # Wayland / Sway
     "sway",

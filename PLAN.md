@@ -124,6 +124,7 @@ This file tracks remaining work after the minimal setup is complete.
 
 ### Development Tools
 
+- [x] tmux
 - [ ] direnv
 - [ ] devbox
 - [ ] Go toolchain
