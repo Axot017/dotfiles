@@ -1,6 +1,7 @@
 {
   "lastChangelogVersion": "0.57.1",
   "theme": "terminal",
+  "quietStartup": true,
   "packages": [
     "npm:pi-subagents",
     "npm:pi-web-access",
