@@ -1,7 +1,10 @@
 {
   "lastChangelogVersion": "0.57.1",
+  "theme": "tokyonight-moon",
   "packages": [
-    "npm:pi-subagents"
+    "npm:pi-subagents",
+    "npm:pi-web-access",
+    "npm:@juanibiapina/pi-tokyonight"
   ],
   "defaultProvider": "openai-codex",
   "defaultModel": "gpt-5.4",
