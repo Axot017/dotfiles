@@ -1,0 +1,9 @@
+{
+  "lastChangelogVersion": "0.57.1",
+  "packages": [
+    "npm:pi-subagents"
+  ],
+  "defaultProvider": "openai-codex",
+  "defaultModel": "gpt-5.4",
+  "defaultThinkingLevel": "medium"
+}
