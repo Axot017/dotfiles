@@ -1,1 +1,1 @@
-When starting a new problem without enough context, first use the `prepare-task` subagent chain to gather context and produce a plan before proceeding.
+When starting a new problem without enough context, first use the `context-builder` subagent to gather context before proceeding.
