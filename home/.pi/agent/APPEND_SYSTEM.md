@@ -1,1 +1,1 @@
-When starting a new problem without enough context, first use the `context-builder` subagent to gather context before proceeding.
+When starting a new problem without enough context, use the `context-builder` subagent to gather context before proceeding, unless the task is trivial. If the task is complex, then use the `planner` subagent after `context-builder` before proceeding.
