@@ -5,7 +5,8 @@
   "packages": [
     "npm:pi-subagents",
     "npm:pi-web-access",
-    "npm:pi-terminal-theme"
+    "npm:pi-terminal-theme",
+    "npm:@aliou/pi-processes"
   ],
   "defaultProvider": "openai-codex",
   "defaultModel": "gpt-5.4",
