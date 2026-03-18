@@ -21,7 +21,6 @@ This file tracks remaining work after the minimal setup is complete.
   - [x] Service enablement
   - [x] SOPS age key generation
 - [x] Simplified README with quick start guide
-- [x] AGENTS.md for coding agents
 
 ---
 
