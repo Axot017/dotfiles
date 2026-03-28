@@ -48,7 +48,7 @@ vim.api.nvim_create_autocmd("FileType", {
 
 
 vim.api.nvim_create_autocmd('FileType', {
-  pattern = { "elixir", "lua", "yaml", "json", "go" },
+  pattern = { "elixir", "lua", "yaml", "json", "go", "http" },
   callback = function() 
     vim.treesitter.start() 
 
