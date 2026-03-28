@@ -23,6 +23,13 @@ return {
         history_bonus = true,
       },
       layout = { preset = "ivy" },
+      win = {
+        input = {
+          keys = {
+            ["<c-h>"] = { "toggle_hidden", mode = { "i", "n" } },
+          },
+        },
+      },
     },
   },
   init = function()
