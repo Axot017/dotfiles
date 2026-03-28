@@ -26,6 +26,12 @@ return {
       desc = "DAP view toggle",
     },
     {
+      "<leader>dw",
+      "<CMD>DapViewWatch<CR>",
+      silent = true,
+      desc = "DAP view toggle",
+    },
+    {
       "<leader>dc",
       function() require("dap").continue() end,
       silent = true,
