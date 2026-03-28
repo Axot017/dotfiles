@@ -59,5 +59,9 @@ return {
       desc = "Sidekick Toggle Claude",
     },
   },
-  opts = {},
+  opts = {
+    nes = {
+      enable = false,
+    },
+  },
 }
