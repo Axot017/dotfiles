@@ -2,10 +2,12 @@ return {
   "mfussenegger/nvim-dap",
   dependencies = {
     {
-        "igorlfs/nvim-dap-view",
-        lazy = false,
-        version = "1.*",
-        opts = {},
+      "igorlfs/nvim-dap-view",
+      lazy = false,
+      version = "1.*",
+      opts = {
+        auto_toggle = true,
+      },
     },
     {
       "leoluz/nvim-dap-go",
