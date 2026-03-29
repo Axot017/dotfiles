@@ -1,0 +1,7 @@
+[[wildcard]]
+pattern = "~/projects/*"
+windows = ["nvim"]
+
+[[window]]
+name = "nvim"
+startup_script = "nvim ."
