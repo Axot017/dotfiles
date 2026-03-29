@@ -1,8 +1,3 @@
 [[wildcard]]
 pattern = "~/Projects/*"
-startup_command = "nvim ."
 
-
-[[window]]
-name = "nvim"
-startup_script = "nvim ."
