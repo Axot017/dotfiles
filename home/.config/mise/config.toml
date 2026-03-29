@@ -1,3 +1,6 @@
 [tools]
-"npm:@mariozechner/pi-coding-agent" = "latest"
 "node" = "latest"
+
+"npm:@mariozechner/pi-coding-agent" = "latest"
+
+"go:github.com/joshmedeski/sesh/v2" = "latest"
