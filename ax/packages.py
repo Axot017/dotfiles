@@ -132,7 +132,8 @@ SYSTEM_PACKAGES = [
     "openrazer-daemon",
     "linux-headers",
 
-    "xdg-desktop-portal-wlr"
+    "xdg-desktop-portal-wlr",
+    "television",
 ]
 
 # AUR packages (paru)
