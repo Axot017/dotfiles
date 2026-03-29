@@ -1,11 +1,7 @@
 [[wildcard]]
 pattern = "~/Projects/*"
-windows = ["nvim"]
+startup_command = "nvim ."
 
-[[session]]
-name = "AAAAAA"
-windows = ["nvim"]
-path = "~/Projects/live_pi"
 
 [[window]]
 name = "nvim"
