@@ -1,6 +1,8 @@
+[default_session]
+windows = ["nvim"]
+
 [[wildcard]]
 pattern = "~/projects/*"
-windows = ["nvim"]
 
 [[window]]
 name = "nvim"
