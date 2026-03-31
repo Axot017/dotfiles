@@ -134,6 +134,7 @@ SYSTEM_PACKAGES = [
 
     "xdg-desktop-portal-wlr",
     "television",
+    "zip",
 ]
 
 # AUR packages (paru)
