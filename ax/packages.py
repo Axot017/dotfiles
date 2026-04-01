@@ -135,6 +135,7 @@ SYSTEM_PACKAGES = [
     "xdg-desktop-portal-wlr",
     "television",
     "zip",
+    "chrome",
 ]
 
 # AUR packages (paru)
