@@ -135,7 +135,6 @@ SYSTEM_PACKAGES = [
     "xdg-desktop-portal-wlr",
     "television",
     "zip",
-    "chrome",
 ]
 
 # AUR packages (paru)
@@ -143,6 +142,7 @@ AUR_PACKAGES = [
     "oh-my-posh-bin",
 
     "zen-browser-bin",
+    "brave-bin",
 
     "opencode-bin",
     "razergenie",
