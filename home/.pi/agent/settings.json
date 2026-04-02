@@ -6,7 +6,10 @@
     "npm:pi-subagents",
     "npm:pi-web-access",
     "npm:pi-terminal-theme",
-    "npm:@aliou/pi-processes"
+    "npm:@aliou/pi-processes",
+    "npm:pi-ask-user",
+    "npm:pi-powerline-footer",
+    "npm:pi-lens"
   ],
   "defaultProvider": "openai-codex",
   "defaultModel": "gpt-5.4",
