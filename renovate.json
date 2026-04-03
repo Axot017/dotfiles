@@ -1,0 +1,8 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended"],
+  "enabledManagers": ["mise"],
+  "dependencyDashboard": true,
+  "prConcurrentLimit": 30,
+  "timezone": "Etc/UTC"
+}
