@@ -1,1 +1,3 @@
 When starting a new problem without enough context, use the `context-builder` subagent to gather context before proceeding, unless the task is simple, in that case do it yourself. If the task is complex, then use the `planner` subagent after `context-builder` before proceeding.
+
+For long-running processes such as web servers, start them in a new `tmux` session instead of running them in the foreground.
