@@ -1,5 +1,5 @@
 {
-  "lastChangelogVersion": "0.57.1",
+  "lastChangelogVersion": "0.65.0",
   "theme": "terminal",
   "quietStartup": true,
   "packages": [
@@ -10,6 +10,6 @@
   ],
   "defaultProvider": "openai-codex",
   "defaultModel": "gpt-5.4",
-  "defaultThinkingLevel": "medium",
+  "defaultThinkingLevel": "high",
   "hideThinkingBlock": false
 }
