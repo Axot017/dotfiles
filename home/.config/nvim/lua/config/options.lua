@@ -5,7 +5,7 @@ vim.g.copilot_no_tab_map = true
 local opt = vim.opt
 
 opt.backup = false
-opt.cmdheight = 1
+opt.cmdheight = 0
 opt.completeopt = { "menuone", "noselect" }
 opt.conceallevel = 0
 opt.fileencoding = "utf-8"
