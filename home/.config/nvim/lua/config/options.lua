@@ -37,3 +37,5 @@ opt.wrap = false
 opt.scrolloff = 8
 opt.guifont = "JetBrainsMonoNL Nerd Font Mono:h12"
 opt.sidescrolloff = 8
+
+require("vim._core.ui2").enable({})

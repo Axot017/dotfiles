@@ -1,12 +1,13 @@
 {
-  "lastChangelogVersion": "0.65.0",
+  "lastChangelogVersion": "0.65.2",
   "theme": "terminal",
   "quietStartup": true,
   "packages": [
     "npm:pi-subagents",
     "npm:pi-web-access",
     "npm:pi-terminal-theme",
-    "npm:pi-powerline-footer"
+    "npm:pi-powerline-footer",
+    "npm:pi-annotate"
   ],
   "defaultProvider": "openai-codex",
   "defaultModel": "gpt-5.4",
