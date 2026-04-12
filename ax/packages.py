@@ -142,7 +142,7 @@ AUR_PACKAGES = [
     "oh-my-posh-bin",
 
     "zen-browser-bin",
-    "brave-bin",
+    "google-chrome",
 
     "opencode-bin",
     "razergenie",
