@@ -11,3 +11,11 @@ startup_script = "git status"
 pattern = "~/Projects/*"
 windows = ["nvim", "cmd"]
 
+[[session]]
+name = "Home"
+name = "~"
+
+[[session]]
+name = "Dotfiles"
+name = "~/.dotfiles"
+windows = ["nvim", "cmd"]
