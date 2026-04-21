@@ -117,3 +117,7 @@ if command -v brew &> /dev/null; then
 fi
 
 eval "$(mise activate zsh)"
+
+if [[ -o interactive && -z "$TMUX" ]]; then
+  tv sesh
+fi
