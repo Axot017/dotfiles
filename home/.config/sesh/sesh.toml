@@ -13,9 +13,9 @@ windows = ["nvim", "cmd"]
 
 [[session]]
 name = "Home"
-name = "~"
+path = "~"
 
 [[session]]
 name = "Dotfiles"
-name = "~/.dotfiles"
+path = "~/.dotfiles"
 windows = ["nvim", "cmd"]
