@@ -2,6 +2,6 @@
 "go" = "1.26.2"
 "node" = "25.9.0"
 
-"npm:@mariozechner/pi-coding-agent" = "0.70.0"
+"npm:@mariozechner/pi-coding-agent" = "0.70.2"
 
 "go:github.com/joshmedeski/sesh/v2" = "latest"
