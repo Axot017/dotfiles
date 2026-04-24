@@ -2,7 +2,7 @@
 name: planner
 description: Creates implementation plans from context and requirements
 tools: read, bash, write
-model: gpt-5.4
+model: gpt-5.5
 thinking: high
 output: plan.md
 defaultReads: context.md

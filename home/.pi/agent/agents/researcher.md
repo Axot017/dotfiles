@@ -2,7 +2,7 @@
 name: researcher
 description: Autonomous web researcher — searches, evaluates, and synthesizes a focused research brief
 tools: read, write, web_search, fetch_content, get_search_content
-model: gpt-5.4
+model: gpt-5.5
 output: research.md
 defaultProgress: true
 ---

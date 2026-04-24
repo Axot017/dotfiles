@@ -2,7 +2,7 @@
 name: scout
 description: Fast codebase recon that returns compressed context for handoff
 tools: read, bash, write
-model: gpt-5.4
+model: gpt-5.5
 output: context.md
 defaultProgress: true
 ---

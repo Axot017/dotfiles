@@ -2,7 +2,7 @@
 name: context-builder
 description: Analyzes requirements and codebase, generates context and meta-prompt
 tools: read, bash, write, web_search
-model: gpt-5.4
+model: gpt-5.5
 output: context.md
 ---
 

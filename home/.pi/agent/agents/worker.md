@@ -2,7 +2,7 @@
 name: worker
 description: General-purpose subagent with full capabilities, isolated context
 tools: read, bash, edit, write
-model: gpt-5.4
+model: gpt-5.5
 defaultReads: context.md, plan.md
 defaultProgress: true
 ---
