@@ -124,8 +124,6 @@ SYSTEM_PACKAGES = [
 
     "docker",
     "docker-compose",
-    "podman",
-    "podman-compose",
 
     "ffmpeg",
 
@@ -133,7 +131,6 @@ SYSTEM_PACKAGES = [
     "linux-headers",
 
     "xdg-desktop-portal-wlr",
-    "television",
     "zip",
 ]
 
@@ -142,10 +139,7 @@ AUR_PACKAGES = [
     "oh-my-posh-bin",
 
     "zen-browser-bin",
-    "google-chrome",
-
-    "opencode-bin",
-    "razergenie",
+    "helium-browser-bin",
 ]
 
 # Packages to explicitly ignore during orphan removal
