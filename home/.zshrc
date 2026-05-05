@@ -119,5 +119,5 @@ fi
 eval "$(mise activate zsh)"
 
 if [[ -o interactive && -z "$TMUX" ]]; then
-  tv sesh
+  sesh connect $(sesh list | fzf)
 fi
