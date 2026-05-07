@@ -3,10 +3,7 @@
   "theme": "terminal",
   "quietStartup": true,
   "packages": [
-    "npm:pi-subagents",
-    "npm:pi-web-access",
-    "npm:pi-terminal-theme",
-    "npm:pi-annotate"
+    "npm:pi-terminal-theme"
   ],
   "defaultProvider": "openai-codex",
   "defaultModel": "gpt-5.5",
