@@ -1,0 +1,10 @@
+{
+  "name": "pi-web-tools-extension",
+  "private": true,
+  "dependencies": {
+    "turndown": "^7.2.0"
+  },
+  "devDependencies": {
+    "@types/turndown": "^5.0.5"
+  }
+}
