@@ -5,7 +5,7 @@ const PLAN_SYSTEM_PROMPT = `Plan mode active.
 Task: make plan for user request. No implementation.
 
 Rules:
-- No edit tool.
+- No edit/write tool.
 - No code/config change.
 - Use other tools if needed.
 - Need info? Ask human. Do not guess risky thing.`;
@@ -18,10 +18,10 @@ export default function planCommandExtension(pi: ExtensionAPI) {
   let planModeActive = false;
   let previousTools: string[] | undefined;
 
-  function allToolsExceptEdit(): string[] {
+  function planTools(): string[] {
     return pi.getAllTools()
       .map((tool) => tool.name)
-      .filter((name) => name !== "edit");
+      .filter((name) => name !== "edit" && name !== "write");
   }
 
   function enterPlanMode() {
@@ -30,7 +30,7 @@ export default function planCommandExtension(pi: ExtensionAPI) {
     }
 
     planModeActive = true;
-    pi.setActiveTools(allToolsExceptEdit());
+    pi.setActiveTools(planTools());
   }
 
   function exitPlanMode() {
@@ -42,7 +42,7 @@ export default function planCommandExtension(pi: ExtensionAPI) {
   }
 
   pi.registerCommand("plan", {
-    description: "Create plan for instruction; edit tool blocked during plan turn",
+    description: "Create plan for instruction; edit/write tools blocked during plan turn",
     handler: async (args, ctx) => {
       const instruction = args.trim();
 
@@ -57,7 +57,7 @@ export default function planCommandExtension(pi: ExtensionAPI) {
       }
 
       enterPlanMode();
-      ctx.ui.notify("Plan turn. All tools enabled except edit.", "info");
+      ctx.ui.notify("Plan turn. All tools enabled except edit/write.", "info");
 
       pi.sendUserMessage(buildPlanPrompt(instruction));
     },
@@ -70,8 +70,8 @@ export default function planCommandExtension(pi: ExtensionAPI) {
   pi.on("before_agent_start", async (event) => {
     if (!planModeActive) return;
 
-    // Tool list can change after reload/dynamic tools. Keep edit disabled for plan turn.
-    pi.setActiveTools(allToolsExceptEdit());
+    // Tool list can change after reload/dynamic tools. Keep edit/write disabled for plan turn.
+    pi.setActiveTools(planTools());
 
     return {
       systemPrompt: `${event.systemPrompt}\n\n${PLAN_SYSTEM_PROMPT}`,
@@ -79,11 +79,11 @@ export default function planCommandExtension(pi: ExtensionAPI) {
   });
 
   pi.on("tool_call", async (event) => {
-    if (!planModeActive || event.toolName !== "edit") return;
+    if (!planModeActive || (event.toolName !== "edit" && event.toolName !== "write")) return;
 
     return {
       block: true,
-      reason: "Plan mode blocks edit tool. Make plan, not patch.",
+      reason: `Plan mode blocks ${event.toolName} tool. Make plan, not patch.`,
     };
   });
 
