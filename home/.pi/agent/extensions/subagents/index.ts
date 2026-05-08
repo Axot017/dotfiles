@@ -12,14 +12,14 @@ const MAX_OUTPUT_BYTES = 200 * 1024;
 const VALID_REASONING = new Set(["off", "minimal", "low", "medium", "high", "xhigh"]);
 
 const SubagentTaskSchema = Type.Object({
-  agent: Type.String({ description: "Subagent name from ~/.pi/subagents or .pi/subagents" }),
-  input: Type.String({ description: "Complete task/input to send directly to this subagent" }),
+  agent: Type.String({ description: "Subagent name. Files live in ~/.pi/subagents or .pi/subagents" }),
+  input: Type.String({ description: "Full task for subagent. Send all needed context here" }),
 });
 
 const SpawnSubagentsParams = Type.Object({
   tasks: Type.Array(SubagentTaskSchema, {
     minItems: 1,
-    description: "One or more subagents to run in parallel. Results are awaited and returned together.",
+    description: "One or more subagents. Run parallel. Wait for all. Return all results.",
   }),
 });
 
@@ -30,7 +30,7 @@ type SpawnSubagentsParamsType = {
 type ToolMode =
   | { kind: "default" }
   | { kind: "include"; names: string[] }
-  | { kind: "all"; exclude: string[] };
+  | { kind: "defaultPlus"; names: string[]; exclude: string[] };
 
 interface SubagentDefinition {
   name: string;
@@ -87,14 +87,18 @@ function parseTools(value: string | undefined): ToolMode {
   const items = splitList(value);
   if (items.length === 0) return { kind: "default" };
 
-  const starIndex = items.findIndex((item) => item === "*" || item.toLowerCase() === "all");
-  if (starIndex >= 0) {
-    const exclude = items
-      .filter((item, index) => index !== starIndex)
-      .map((item) => item.startsWith("!") ? item.slice(1) : item)
-      .map((item) => item.trim())
-      .filter(Boolean);
-    return { kind: "all", exclude };
+  const hasDefaultToken = items.some((item) => item === "*" || item.toLowerCase() === "default");
+  if (hasDefaultToken) {
+    const names: string[] = [];
+    const exclude: string[] = [];
+    for (const item of items) {
+      if (item === "*" || item.toLowerCase() === "default") continue;
+      const target = item.startsWith("!") ? item.slice(1) : item;
+      if (!target.trim()) continue;
+      if (item.startsWith("!")) exclude.push(target.trim());
+      else names.push(target.trim());
+    }
+    return { kind: "defaultPlus", names, exclude };
   }
 
   return { kind: "include", names: items };
@@ -181,7 +185,9 @@ async function loadSubagents(cwd: string): Promise<Map<string, SubagentDefinitio
 function describeTools(tools: ToolMode) {
   if (tools.kind === "default") return "default tools";
   if (tools.kind === "include") return tools.names.join(", ");
-  return tools.exclude.length > 0 ? `all tools except ${tools.exclude.join(", ")}` : "all tools";
+  const added = tools.names.length > 0 ? ` plus ${tools.names.join(", ")}` : "";
+  const excluded = tools.exclude.length > 0 ? ` minus ${tools.exclude.join(", ")}` : "";
+  return `default tools${added}${excluded}`;
 }
 
 function toolSourcePath(tool: ReturnType<ExtensionAPI["getAllTools"]>[number]) {
@@ -213,10 +219,15 @@ function resolveTools(definition: SubagentDefinition, pi: ExtensionAPI): Resolve
     if (missing.length > 0) throw new Error(`Subagent ${definition.name} references unknown tool(s): ${missing.join(", ")}`);
     toolNames = definition.tools.names;
   } else {
-    const missing = unknown(definition.tools.exclude);
-    if (missing.length > 0) throw new Error(`Subagent ${definition.name} excludes unknown tool(s): ${missing.join(", ")}`);
+    const referenced = [...definition.tools.names, ...definition.tools.exclude];
+    const missing = unknown(referenced);
+    if (missing.length > 0) throw new Error(`Subagent ${definition.name} references unknown tool(s): ${missing.join(", ")}`);
+
     const exclude = new Set(definition.tools.exclude);
-    toolNames = allTools.map((tool) => tool.name).filter((name) => !exclude.has(name));
+    const defaultToolNames = allTools
+      .filter((tool) => tool.sourceInfo?.source === "builtin")
+      .map((tool) => tool.name);
+    toolNames = [...defaultToolNames, ...definition.tools.names].filter((name) => !exclude.has(name));
   }
 
   toolNames = [...new Set(toolNames)].filter((name) => name !== TOOL_NAME);
@@ -343,12 +354,12 @@ export default function subagentsExtension(pi: ExtensionAPI) {
     name: TOOL_NAME,
     label: "Spawn Subagents",
     description:
-      "Spawn one or more configured subagents in parallel and await their direct text results. Subagents are markdown files in ~/.pi/subagents and .pi/subagents; project definitions win conflicts.",
-    promptSnippet: "Spawn one or more configured subagents and await their direct text results.",
+      "Spawn one or more small helper agents. They run parallel. Tool waits. Results come back as text. Agent files live in ~/.pi/subagents and .pi/subagents; project wins name clash.",
+    promptSnippet: "Spawn helper agents. Wait for direct text results.",
     promptGuidelines: [
-      "Use spawn_subagents when a focused independent agent should inspect, research, review, or implement a task.",
-      "Pass each subagent its complete input directly; it only receives that input plus its own configured prompt.",
-      "spawn_subagents runs multiple tasks in parallel and returns all results directly to the parent agent.",
+      "Use spawn_subagents when separate focused brain should inspect, research, review, or implement.",
+      "Give each subagent full task input. Subagent sees only that input plus own prompt.",
+      "spawn_subagents runs many tasks parallel and returns all results to main agent.",
     ],
     parameters: SpawnSubagentsParams,
 
@@ -390,14 +401,17 @@ export default function subagentsExtension(pi: ExtensionAPI) {
 
     renderResult(result, _options, theme) {
       const details = result.details as { total?: number; successes?: number; failures?: number } | undefined;
-      if (!details) {
+      if (!details || typeof details.total !== "number") {
         const text = result.content[0];
-        return new Text(text?.type === "text" ? text.text : "", 0, 0);
+        const fallback = text?.type === "text" && text.text ? text.text : "subagents running...";
+        return new Text(theme.fg("muted", fallback), 0, 0);
       }
-      const color = details.failures ? "warning" : "success";
+      const successes = details.successes ?? 0;
+      const failures = details.failures ?? details.total - successes;
+      const color = failures ? "warning" : "success";
       return new Text(
-        theme.fg(color, `✓ subagents complete: ${details.successes ?? 0}/${details.total ?? 0} succeeded`) +
-          (details.failures ? theme.fg("error", ` (${details.failures} failed)`) : ""),
+        theme.fg(color, `✓ subagents complete: ${successes}/${details.total} succeeded`) +
+          (failures ? theme.fg("error", ` (${failures} failed)`) : ""),
         0,
         0,
       );

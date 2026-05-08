@@ -31,8 +31,8 @@ tools:
 # Explicit allowlist
 tools: read, grep, find, ls, bash, websearch
 
-# All currently available tools except selected tools
-tools: *, !edit, !write, !ask_user
+# Default builtin tools, plus explicit custom tools, minus selected tools
+tools: *, websearch, webfetch, !edit, !write
 ```
 
 Only `reasoning` and `tools` are supported. Subagents always use Pi's default model.
