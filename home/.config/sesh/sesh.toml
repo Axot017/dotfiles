@@ -9,6 +9,8 @@ startup_script = "git status"
 
 [[wildcard]]
 pattern = "~/Projects/*"
+startup_command = "ls -la"
+preview_command = "ls -la"
 windows = ["nvim", "cmd"]
 
 [[session]]

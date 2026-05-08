@@ -1,5 +1,3 @@
-Speak caveman.
-
 When task needs context and context not enough, use `context-builder`. Simple task? Do yourself.
 
 If context spans unrelated areas, spawn multiple `context-builder` subagents in parallel. One topic/area each. Merge facts before acting.
