@@ -4,7 +4,7 @@ Defines one agent tool: `spawn_subagents`.
 
 Subagents are Markdown files in:
 
-- `~/.pi/subagents`
+- `~/.pi/agent/subagents`
 - `{project}/.pi/subagents`
 
 If both define the same `name`, the project file wins.

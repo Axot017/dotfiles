@@ -12,7 +12,7 @@ const MAX_OUTPUT_BYTES = 200 * 1024;
 const VALID_REASONING = new Set(["off", "minimal", "low", "medium", "high", "xhigh"]);
 
 const SubagentTaskSchema = Type.Object({
-  agent: Type.String({ description: "Subagent name. Files live in ~/.pi/subagents or .pi/subagents" }),
+  agent: Type.String({ description: "Subagent name. Files live in ~/.pi/agent/subagents or .pi/subagents" }),
   input: Type.String({ description: "Full task for subagent. Send all needed context here" }),
 });
 
@@ -168,7 +168,7 @@ async function findMarkdownFiles(dir: string): Promise<string[]> {
 }
 
 async function loadSubagents(cwd: string): Promise<Map<string, SubagentDefinition>> {
-  const userDir = join(homedir(), ".pi", "subagents");
+  const userDir = join(homedir(), ".pi", "agent", "subagents");
   const projectDir = resolve(cwd, ".pi", "subagents");
   const result = new Map<string, SubagentDefinition>();
 
@@ -354,7 +354,7 @@ export default function subagentsExtension(pi: ExtensionAPI) {
     name: TOOL_NAME,
     label: "Spawn Subagents",
     description:
-      "Spawn one or more small helper agents. They run parallel. Tool waits. Results come back as text. Agent files live in ~/.pi/subagents and .pi/subagents; project wins name clash.",
+      "Spawn one or more small helper agents. They run parallel. Tool waits. Results come back as text. Agent files live in ~/.pi/agent/subagents and .pi/subagents; project wins name clash."
     promptSnippet: "Spawn helper agents. Wait for direct text results.",
     promptGuidelines: [
       "Use spawn_subagents when separate focused brain should inspect, research, review, or implement.",
@@ -366,7 +366,7 @@ export default function subagentsExtension(pi: ExtensionAPI) {
     async execute(_toolCallId, params: SpawnSubagentsParamsType, signal, _onUpdate, ctx: ExtensionContext) {
       const agents = await loadSubagents(ctx.cwd);
       if (agents.size === 0) {
-        throw new Error("No subagents found. Create markdown files in ~/.pi/subagents or .pi/subagents.");
+        throw new Error("No subagents found. Create markdown files in ~/.pi/agent/subagents or .pi/subagents.");
       }
 
       const tasks = params.tasks.map((task) => {
