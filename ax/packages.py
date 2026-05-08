@@ -133,7 +133,8 @@ SYSTEM_PACKAGES = [
     "xdg-desktop-portal-wlr",
     "zip",
 
-    "eza"
+    "eza",
+    "fastfetch",
 ]
 
 # AUR packages (paru)

@@ -9,15 +9,19 @@ startup_script = "git status"
 
 [[wildcard]]
 pattern = "~/Projects/*"
-startup_command = "ls -la"
-preview_command = "ls -la"
+startup_command = "git status"
+preview_command = "eza --all --git --icons --color=always {}"
 windows = ["nvim", "cmd"]
 
 [[session]]
 name = "Home"
+startup_command = "fastfetch"
+preview_command = "fastfetch"
 path = "~"
 
 [[session]]
 name = "Dotfiles"
+startup_command = "git status"
+preview_command = "eza --all --git --icons --color=always {}"
 path = "~/.dotfiles"
 windows = ["nvim", "cmd"]
