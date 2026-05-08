@@ -3,25 +3,28 @@ name = "nvim"
 startup_script = "nvim"
 
 [[window]]
-name = "cmd"
-startup_script = "git status"
+name = "pi"
+startup_script = "pi"
+
+[[window]]
+name = "srv"
 
 
 [[wildcard]]
 pattern = "~/Projects/*"
-startup_command = "git status"
 preview_command = "eza --all --git --icons --color=always {}"
-windows = ["nvim", "cmd"]
+windows = ["nvim", "pi", "srv"]
 
 [[session]]
 name = "Home"
-startup_command = "fastfetch"
 preview_command = "fastfetch"
 path = "~"
 
 [[session]]
 name = "Dotfiles"
-startup_command = "git status"
 preview_command = "eza --all --git --icons --color=always {}"
 path = "~/.dotfiles"
-windows = ["nvim", "cmd"]
+windows = ["nvim", "pi"]
+
+[default_session]
+preview_command = "eza --all --git --icons --color=always {}"
