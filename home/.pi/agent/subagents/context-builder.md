@@ -1,7 +1,7 @@
 ---
 name: context-builder
 description: Gather code facts and make handoff context for planner
-reasoning: high
+reasoning: medium
 tools: *, websearch, webfetch, !write, !edit
 ---
 

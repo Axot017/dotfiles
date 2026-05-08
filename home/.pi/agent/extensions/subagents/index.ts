@@ -156,8 +156,9 @@ async function findMarkdownFiles(dir: string): Promise<string[]> {
     const entries = await readdir(dir, { withFileTypes: true });
     const nested = await Promise.all(entries.map(async (entry) => {
       const path = join(dir, entry.name);
+      const isMarkdown = [".md", ".markdown"].includes(extname(entry.name).toLowerCase());
       if (entry.isDirectory()) return findMarkdownFiles(path);
-      if (entry.isFile() && [".md", ".markdown"].includes(extname(entry.name).toLowerCase())) return [path];
+      if (isMarkdown && (entry.isFile() || entry.isSymbolicLink())) return [path];
       return [];
     }));
     return nested.flat();
@@ -354,7 +355,7 @@ export default function subagentsExtension(pi: ExtensionAPI) {
     name: TOOL_NAME,
     label: "Spawn Subagents",
     description:
-      "Spawn one or more small helper agents. They run parallel. Tool waits. Results come back as text. Agent files live in ~/.pi/agent/subagents and .pi/subagents; project wins name clash."
+      "Spawn one or more small helper agents. They run parallel. Tool waits. Results come back as text. Agent files live in ~/.pi/agent/subagents and .pi/subagents; project wins name clash.",
     promptSnippet: "Spawn helper agents. Wait for direct text results.",
     promptGuidelines: [
       "Use spawn_subagents when separate focused brain should inspect, research, review, or implement.",
