@@ -4,4 +4,4 @@
 
 "npm:@mariozechner/pi-coding-agent" = "0.73.1"
 
-"go:github.com/joshmedeski/sesh/v2" = "v2.26.1"
+"go:github.com/joshmedeski/sesh/v2" = "v2.26.2"
