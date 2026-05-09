@@ -5,7 +5,7 @@ import { Type } from "@sinclair/typebox";
 const QuestionItemSchema = Type.Object({
   question: Type.String({ description: "Question to ask the user" }),
   answers: Type.Array(Type.String({ minLength: 1 }), {
-    description: "Predefined answers. The tool always adds a custom answer option.",
+    description: "Predefined answers only. Do not include custom/other/free-form choices; the tool always adds a custom answer option automatically.",
     minItems: 1,
   }),
 });
@@ -14,13 +14,13 @@ const AskUserParams = Type.Object({
   question: Type.Optional(Type.String({ description: "Question to ask the user" })),
   answers: Type.Optional(
     Type.Array(Type.String({ minLength: 1 }), {
-      description: "Predefined answers. The tool always adds a custom answer option.",
+      description: "Predefined answers only. Do not include custom/other/free-form choices; the tool always adds a custom answer option automatically.",
       minItems: 1,
     }),
   ),
   questions: Type.Optional(
     Type.Array(QuestionItemSchema, {
-      description: "Ask multiple questions in one UI flow. Each question has predefined answers; custom answer is always available.",
+      description: "Ask multiple questions in one UI flow. Each question has predefined answers only; custom answer is always available automatically.",
       minItems: 1,
     }),
   ),
@@ -79,6 +79,8 @@ export default function askUserExtension(pi: ExtensionAPI) {
       "Use this tool when you need the user to choose from options or type a custom answer.",
       "For a single question pass question + answers.",
       "For multiple questions pass questions: [{ question, answers }].",
+      "Do not include a custom/other/free-form answer choice in answers; the UI always adds Custom answer… automatically.",
+      "Only include meaningful predefined answers specific to the question.",
       "The tool returns a plain string for one question, or a JSON array string for multiple questions.",
     ],
     parameters: AskUserParams,

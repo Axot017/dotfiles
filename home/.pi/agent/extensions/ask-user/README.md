@@ -9,9 +9,11 @@ The tool asks the user either:
 - a series of questions in one UI flow
 
 Each question has:
-- a predefined list of answers
+- a predefined list of meaningful answers
 - an always-available `Custom answer…` option
 - keyboard-only navigation
+
+Agents should not put choices like "Other", "Custom", "Something else", or "Provide another answer" in `answers`. The extension adds `Custom answer…` automatically.
 
 ## Keys
 
