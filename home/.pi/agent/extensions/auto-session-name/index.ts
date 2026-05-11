@@ -19,7 +19,7 @@ const DEFAULT_CONFIG: AutoSessionNameConfig = {
   enabled: true,
   useCurrentModel: false,
   useCurrentAuth: true,
-  provider: "openai",
+  provider: "openai-codex",
   model: "gpt-5.4-mini",
   maxTokens: 64,
   maxTitleLength: 80,
@@ -110,7 +110,8 @@ async function generateName(
 ) {
   const model = resolveModel(ctx, config);
   if (!model) {
-    if (ctx.hasUI) ctx.ui.notify("auto-session-name: no current model available", "warning");
+    const name = config.useCurrentModel ? "current model" : `${config.provider}/${config.model}`;
+    if (ctx.hasUI) ctx.ui.notify(`auto-session-name: model not found: ${name}`, "warning");
     return;
   }
 

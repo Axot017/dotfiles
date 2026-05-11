@@ -2,7 +2,7 @@
   "enabled": true,
   "useCurrentModel": false,
   "useCurrentAuth": true,
-  "provider": "openai",
+  "provider": "openai-codex",
   "model": "gpt-5.4-mini",
   "maxTokens": 64,
   "maxTitleLength": 80,
