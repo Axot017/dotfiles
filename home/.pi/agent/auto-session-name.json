@@ -1,0 +1,8 @@
+{
+  "enabled": true,
+  "provider": "openai",
+  "model": "gpt-5.4-mini",
+  "maxTokens": 64,
+  "maxTitleLength": 80,
+  "notify": true
+}
