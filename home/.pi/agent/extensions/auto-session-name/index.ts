@@ -1,13 +1,15 @@
 import { readFile } from "node:fs/promises";
 import { homedir } from "node:os";
 import { join } from "node:path";
-import { complete, type UserMessage } from "@mariozechner/pi-ai";
+import { complete, type Api, type Model, type UserMessage } from "@mariozechner/pi-ai";
 import type { ExtensionAPI, ExtensionContext } from "@mariozechner/pi-coding-agent";
 
 interface AutoSessionNameConfig {
   enabled: boolean;
-  provider: string;
-  model: string;
+  useCurrentModel: boolean;
+  useCurrentAuth: boolean;
+  provider?: string;
+  model?: string;
   maxTokens: number;
   maxTitleLength: number;
   notify: boolean;
@@ -15,8 +17,10 @@ interface AutoSessionNameConfig {
 
 const DEFAULT_CONFIG: AutoSessionNameConfig = {
   enabled: true,
-  provider: "google",
-  model: "gemini-2.5-flash",
+  useCurrentModel: false,
+  useCurrentAuth: true,
+  provider: "openai",
+  model: "gpt-5.4-mini",
   maxTokens: 64,
   maxTitleLength: 80,
   notify: true,
@@ -42,8 +46,10 @@ async function loadConfig(ctx?: ExtensionContext): Promise<AutoSessionNameConfig
     const parsed = JSON.parse(raw) as Record<string, unknown>;
     return {
       enabled: asBool(parsed.enabled, DEFAULT_CONFIG.enabled),
-      provider: asString(parsed.provider, DEFAULT_CONFIG.provider),
-      model: asString(parsed.model, DEFAULT_CONFIG.model),
+      useCurrentModel: asBool(parsed.useCurrentModel, DEFAULT_CONFIG.useCurrentModel),
+      useCurrentAuth: asBool(parsed.useCurrentAuth, DEFAULT_CONFIG.useCurrentAuth),
+      provider: typeof parsed.provider === "string" && parsed.provider.trim() ? parsed.provider.trim() : DEFAULT_CONFIG.provider,
+      model: typeof parsed.model === "string" && parsed.model.trim() ? parsed.model.trim() : DEFAULT_CONFIG.model,
       maxTokens: asPositiveInt(parsed.maxTokens, DEFAULT_CONFIG.maxTokens),
       maxTitleLength: asPositiveInt(parsed.maxTitleLength, DEFAULT_CONFIG.maxTitleLength),
       notify: asBool(parsed.notify, DEFAULT_CONFIG.notify),
@@ -85,6 +91,16 @@ function sanitizeTitle(raw: string, maxLength: number): string {
   return title;
 }
 
+function resolveModel(ctx: ExtensionContext, config: AutoSessionNameConfig): Model<Api> | undefined {
+  if (config.useCurrentModel || !config.provider || !config.model) return ctx.model ?? undefined;
+  return ctx.modelRegistry.find(config.provider, config.model);
+}
+
+function resolveAuthModel(ctx: ExtensionContext, config: AutoSessionNameConfig, targetModel: Model<Api>): Model<Api> {
+  if (config.useCurrentAuth && ctx.model) return ctx.model;
+  return targetModel;
+}
+
 async function generateName(
   pi: ExtensionAPI,
   ctx: ExtensionContext,
@@ -92,19 +108,16 @@ async function generateName(
   firstMessage: string,
   signal: AbortSignal,
 ) {
-  const model = ctx.modelRegistry.find(config.provider, config.model);
+  const model = resolveModel(ctx, config);
   if (!model) {
-    if (ctx.hasUI) ctx.ui.notify(`auto-session-name: model not found: ${config.provider}/${config.model}`, "warning");
+    if (ctx.hasUI) ctx.ui.notify("auto-session-name: no current model available", "warning");
     return;
   }
 
-  const auth = await ctx.modelRegistry.getApiKeyAndHeaders(model);
+  const authModel = resolveAuthModel(ctx, config, model);
+  const auth = await ctx.modelRegistry.getApiKeyAndHeaders(authModel);
   if (!auth.ok) {
     if (ctx.hasUI) ctx.ui.notify(`auto-session-name: auth failed: ${auth.error}`, "warning");
-    return;
-  }
-  if (!auth.apiKey) {
-    if (ctx.hasUI) ctx.ui.notify(`auto-session-name: no API key for ${model.provider}`, "warning");
     return;
   }
 
