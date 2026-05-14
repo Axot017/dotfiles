@@ -143,6 +143,7 @@ AUR_PACKAGES = [
 
     "zen-browser-bin",
     "helium-browser-bin",
+    "vial-appimage",
 ]
 
 # Packages to explicitly ignore during orphan removal
