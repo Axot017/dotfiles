@@ -141,7 +141,6 @@ SYSTEM_PACKAGES = [
 AUR_PACKAGES = [
     "oh-my-posh-bin",
 
-    "zen-browser-bin",
     "helium-browser-bin",
     "vial-appimage",
 ]
