@@ -27,6 +27,11 @@ const DEFAULT_CONFIG: AutoSessionNameConfig = {
 };
 
 const CONFIG_PATH = join(homedir(), ".pi", "agent", "auto-session-name.json");
+const PLAN_FIRST_INPUT_EVENT = "auto-session-name:first-input";
+
+interface FirstInputEvent {
+  text?: unknown;
+}
 
 function asBool(value: unknown, fallback: boolean): boolean {
   return typeof value === "boolean" ? value : fallback;
@@ -165,30 +170,26 @@ export default function (pi: ExtensionAPI) {
   let started = false;
   let controller: AbortController | undefined;
   let generationId = 0;
+  let pendingFirstInput: string | undefined;
 
-  pi.on("session_start", () => {
+  function resetGenerationState() {
     started = false;
+    pendingFirstInput = undefined;
     controller?.abort();
     controller = undefined;
     generationId += 1;
-  });
+  }
 
-  pi.on("session_shutdown", () => {
-    controller?.abort();
-    controller = undefined;
-    generationId += 1;
-  });
+  async function startGeneration(ctx: ExtensionContext, text: string): Promise<void> {
+    if (started || pi.getSessionName()) return;
 
-  pi.on("input", async (event, ctx) => {
-    if (started || pi.getSessionName() || isIgnorableInput(event.text, event.source)) {
-      return { action: "continue" };
-    }
+    const firstMessage = text.trim();
+    if (!firstMessage) return;
 
     const config = await loadConfig(ctx);
-    if (!config.enabled) return { action: "continue" };
+    if (!config.enabled) return;
 
     started = true;
-    const firstMessage = event.text.trim();
     const id = generationId;
     controller = new AbortController();
     const signal = controller.signal;
@@ -197,7 +198,42 @@ export default function (pi: ExtensionAPI) {
       if (signal.aborted || id !== generationId) return;
       if (ctx.hasUI) ctx.ui.notify(`auto-session-name failed: ${String(error)}`, "warning");
     });
+  }
+
+  pi.events.on(PLAN_FIRST_INPUT_EVENT, (event: unknown) => {
+    if (started || pi.getSessionName()) return;
+
+    const payload = event as FirstInputEvent | undefined;
+    const text = typeof payload?.text === "string" ? payload.text.trim() : "";
+    if (!text) return;
+
+    pendingFirstInput = text;
+  });
+
+  pi.on("session_start", () => {
+    resetGenerationState();
+  });
+
+  pi.on("session_shutdown", () => {
+    resetGenerationState();
+  });
+
+  pi.on("input", async (event, ctx) => {
+    if (isIgnorableInput(event.text, event.source)) {
+      return { action: "continue" };
+    }
+
+    await startGeneration(ctx, event.text);
 
     return { action: "continue" };
+  });
+
+  pi.on("before_agent_start", async (_event, ctx) => {
+    const firstInput = pendingFirstInput;
+    pendingFirstInput = undefined;
+
+    if (!firstInput) return;
+
+    await startGeneration(ctx, firstInput);
   });
 }

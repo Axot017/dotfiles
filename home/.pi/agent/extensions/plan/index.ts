@@ -12,6 +12,7 @@ Rules:
 - Need info? Ask human. Do not guess risky thing.`;
 
 const IMPLEMENT_PROMPT = "Implement the plan above.";
+const AUTO_SESSION_NAME_FIRST_INPUT_EVENT = "auto-session-name:first-input";
 
 function buildPlanPrompt(instruction: string): string {
   return `${PLAN_SYSTEM_PROMPT}\n\nUser instruction:\n${instruction}`;
@@ -248,6 +249,7 @@ export default function planCommandExtension(pi: ExtensionAPI) {
 
       enterPlanMode();
       ctx.ui.notify("Plan mode. All tools enabled except edit/write.", "info");
+      pi.events.emit(AUTO_SESSION_NAME_FIRST_INPUT_EVENT, { text: instruction });
 
       pi.sendUserMessage(buildPlanPrompt(instruction));
     },
