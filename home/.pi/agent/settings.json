@@ -7,6 +7,6 @@
   ],
   "defaultProvider": "openai-codex",
   "defaultModel": "gpt-5.5",
-  "defaultThinkingLevel": "low",
+  "defaultThinkingLevel": "high",
   "hideThinkingBlock": false
 }
