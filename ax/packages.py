@@ -145,6 +145,8 @@ AUR_PACKAGES = [
 
     "helium-browser-bin",
     "vial-appimage",
+
+    "velocidrone",
 ]
 
 # Packages to explicitly ignore during orphan removal
