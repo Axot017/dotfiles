@@ -127,7 +127,6 @@ SYSTEM_PACKAGES = [
 
     "ffmpeg",
 
-    "openrazer-daemon",
     "linux-headers",
 
     "xdg-desktop-portal-wlr",
@@ -145,8 +144,6 @@ AUR_PACKAGES = [
 
     "helium-browser-bin",
     "vial-appimage",
-
-    "velocidrone",
 ]
 
 # Packages to explicitly ignore during orphan removal
