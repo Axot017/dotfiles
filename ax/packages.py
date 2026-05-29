@@ -135,6 +135,8 @@ SYSTEM_PACKAGES = [
 
     "eza",
     "fastfetch",
+
+    "kdeconnect",
 ]
 
 # AUR packages (paru)
