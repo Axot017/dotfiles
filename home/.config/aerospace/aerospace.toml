@@ -1,0 +1,135 @@
+# AeroSpace configuration
+# Generated from ~/.config/sway/config
+# Docs: https://nikitabobko.github.io/AeroSpace/guide
+
+config-version = 2
+
+# Keep startup side effects minimal; Linux/Sway services from the original config are intentionally skipped.
+after-startup-command = []
+start-at-login = false
+
+# i3/Sway-like tree behavior. This makes `split horizontal` / `split vertical`
+# useful and closer to Sway's mental model.
+enable-normalization-flatten-containers = false
+enable-normalization-opposite-orientation-for-nested-containers = false
+
+default-root-container-layout = 'tiles'
+default-root-container-orientation = 'auto'
+accordion-padding = 30
+
+# Sway config has `focus_follows_mouse no`; don't move the mouse on focus changes.
+on-focused-monitor-changed = []
+
+# Keep the numbered Sway workspaces available.
+persistent-workspaces = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']
+
+[key-mapping]
+    preset = 'qwerty'
+
+# Make exec-and-forget useful when AeroSpace is started as a GUI app on macOS.
+[exec]
+    inherit-env-vars = true
+
+[exec.env-vars]
+    PATH = '/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:${PATH}'
+
+# Match Sway gaps: inner 4, outer 8.
+[gaps]
+    inner.horizontal = 4
+    inner.vertical = 4
+    outer.left = 8
+    outer.bottom = 8
+    outer.top = 8
+    outer.right = 8
+
+[mode.main.binding]
+    # Sway `$mod` is Mod4/Super. Per preference, map it to macOS `cmd`.
+    # `cmd-space` is intentionally left unbound so the macOS default opens Spotlight.
+
+    # Applications
+    cmd-t = 'exec-and-forget open -na Ghostty'
+
+    # Sway/Linux-only bindings intentionally skipped:
+    # - cmd-shift-v: cliphist + rofi + wl-copy clipboard history
+    # - cmd-p: rofi power menu
+    # - cmd-n: swaync notification center
+
+    # Screenshots, approximated with macOS screencapture.
+    cmd-s = 'exec-and-forget mkdir -p "$HOME/Pictures/Screenshots" && screencapture "$HOME/Pictures/Screenshots/$(date +"%Y-%m-%dT%H:%M:%S").png"'
+    cmd-ctrl-s = 'exec-and-forget mkdir -p "$HOME/Pictures/Screenshots" && screencapture -i "$HOME/Pictures/Screenshots/$(date +"%Y-%m-%dT%H:%M:%S").png"'
+
+    # Kill/close focused window
+    cmd-q = 'close --quit-if-last-window'
+
+    # Navigation: h/j/k/l
+    cmd-h = 'focus left'
+    cmd-j = 'focus down'
+    cmd-k = 'focus up'
+    cmd-l = 'focus right'
+
+    # Move focused window
+    cmd-shift-h = 'move left'
+    cmd-shift-j = 'move down'
+    cmd-shift-k = 'move up'
+    cmd-shift-l = 'move right'
+
+    # Workspaces
+    cmd-1 = 'workspace 1'
+    cmd-2 = 'workspace 2'
+    cmd-3 = 'workspace 3'
+    cmd-4 = 'workspace 4'
+    cmd-5 = 'workspace 5'
+    cmd-6 = 'workspace 6'
+    cmd-7 = 'workspace 7'
+    cmd-8 = 'workspace 8'
+    cmd-9 = 'workspace 9'
+    cmd-0 = 'workspace 10'
+
+    # Move to workspace
+    cmd-shift-1 = 'move-node-to-workspace 1'
+    cmd-shift-2 = 'move-node-to-workspace 2'
+    cmd-shift-3 = 'move-node-to-workspace 3'
+    cmd-shift-4 = 'move-node-to-workspace 4'
+    cmd-shift-5 = 'move-node-to-workspace 5'
+    cmd-shift-6 = 'move-node-to-workspace 6'
+    cmd-shift-7 = 'move-node-to-workspace 7'
+    cmd-shift-8 = 'move-node-to-workspace 8'
+    cmd-shift-9 = 'move-node-to-workspace 9'
+    cmd-shift-0 = 'move-node-to-workspace 10'
+
+    # Layout
+    cmd-f = 'fullscreen'
+    cmd-shift-f = 'layout floating tiling'
+    cmd-b = 'split horizontal'
+    cmd-v = 'split vertical'
+    cmd-e = 'layout tiles accordion'
+
+    # Sway scratchpad and focus parent don't have direct AeroSpace equivalents.
+    # - cmd-a: focus parent unsupported
+    # - cmd-shift-minus / cmd-minus: scratchpad unsupported
+
+    # Resize shortcuts
+    cmd-ctrl-h = 'resize width -10'
+    cmd-ctrl-j = 'resize height +10'
+    cmd-ctrl-k = 'resize height -10'
+    cmd-ctrl-l = 'resize width +10'
+    cmd-r = 'mode resize'
+
+    # System
+    cmd-shift-c = 'reload-config'
+    # Sway exit binding skipped; use AeroSpace quit/disable from menu/CLI if needed.
+
+[mode.resize.binding]
+    h = 'resize width -10'
+    j = 'resize height +10'
+    k = 'resize height -10'
+    l = 'resize width +10'
+
+    enter = 'mode main'
+    esc = 'mode main'
+
+# Window rules
+# Linux-only Sway app_id rules skipped: pavucontrol, blueman-manager, nm-connection-editor.
+[[on-window-detected]]
+    if.window-title-regex-substring = '^Picture-in-Picture$'
+    run = 'layout floating'
