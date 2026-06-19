@@ -2,6 +2,6 @@
 "go" = "1.26.4"
 "node" = "25.9.0"
 
-"pi" = "0.79.7"
+"pi" = "0.79.8"
 
 "go:github.com/joshmedeski/sesh/v2" = "v2.26.2"
