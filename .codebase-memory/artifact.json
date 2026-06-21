@@ -1,0 +1,11 @@
+{
+    "schema_version": 1,
+    "commit": "e7758b46425d2872d51b05749b3329d4e37538ff",
+    "indexed_at": "2026-06-21T21:40:37Z",
+    "project": "home-axot-.dotfiles",
+    "nodes": 1997,
+    "edges": 3507,
+    "original_size": 5242880,
+    "compressed_size": 1224606,
+    "compression_level": 9
+}
