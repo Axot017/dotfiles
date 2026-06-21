@@ -2,6 +2,8 @@
 "go" = "1.26.4"
 "node" = "25.9.0"
 
+"neovim" = "0.12.3"
 "pi" = "0.79.9"
+"rtk" = "0.42.4"
 
 "go:github.com/joshmedeski/sesh/v2" = "v2.26.2"
