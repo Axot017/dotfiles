@@ -17,7 +17,6 @@ SYSTEM_PACKAGES = [
     "inotify-tools",
     "zram-generator",
 
-    "neovim",
     "tree-sitter-cli",
     
     # Filesystem
@@ -92,7 +91,6 @@ SYSTEM_PACKAGES = [
     "vulkan-radeon",
     
     # Utilities
-    "ripgrep",
     "fd",
     "jq",
     "unzip",
