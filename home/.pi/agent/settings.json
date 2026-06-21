@@ -3,7 +3,8 @@
   "theme": "terminal",
   "quietStartup": true,
   "packages": [
-    "npm:pi-terminal-theme"
+    "npm:pi-terminal-theme",
+    "npm:pi-mcp-adapter"
   ],
   "defaultProvider": "openai-codex",
   "defaultModel": "gpt-5.5",
