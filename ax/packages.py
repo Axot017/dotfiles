@@ -142,6 +142,7 @@ AUR_PACKAGES = [
 
     "helium-browser-bin",
     "vial-appimage",
+    "codebase-memory-mcp",
 ]
 
 # Packages to explicitly ignore during orphan removal

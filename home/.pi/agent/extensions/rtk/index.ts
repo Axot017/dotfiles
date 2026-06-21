@@ -26,7 +26,7 @@ async function rewriteCommand(
   return result.stdout.trim() || null
 }
 
-export default async function (pi: ExtensionAPI) {
+export default async function rtk(pi: ExtensionAPI) {
   // Probe rtk version at load time; disables extension if missing or too old.
   const ver = await pi.exec("rtk", ["--version"], { timeout: REWRITE_TIMEOUT_MS })
   if (ver.code !== 0) {
