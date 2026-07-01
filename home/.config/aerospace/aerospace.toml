@@ -60,9 +60,6 @@ persistent-workspaces = ['1', '2', '3', '4', '5']
 
     cmd-f = 'fullscreen'
     cmd-shift-f = 'layout floating tiling'
-    cmd-b = 'split horizontal'
-    cmd-v = 'split vertical'
-    cmd-e = 'layout tiles accordion'
 
     cmd-ctrl-h = 'resize width -10'
     cmd-ctrl-j = 'resize height +10'
@@ -84,3 +81,10 @@ persistent-workspaces = ['1', '2', '3', '4', '5']
 [[on-window-detected]]
     if.window-title-regex-substring = '^Picture-in-Picture$'
     run = 'layout floating'
+
+[workspace-to-monitor-force-assignment]
+    1 = 'secondary' 
+    2 = 'secondary'  
+    3 = 'secondary'  
+    4 = 'secondary'  
+    5 = 'main'  

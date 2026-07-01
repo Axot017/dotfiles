@@ -1,7 +1,7 @@
 ---
 name: worker
 description: Implement parent task and report what changed
-reasoning: low
+reasoning: high
 tools: *, websearch, webfetch
 ---
 
