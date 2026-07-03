@@ -134,6 +134,7 @@ SYSTEM_PACKAGES = [
     "fastfetch",
 
     "kdeconnect",
+    "os-prober",
 ]
 
 # AUR packages (paru)
