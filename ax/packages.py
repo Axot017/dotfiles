@@ -136,6 +136,8 @@ SYSTEM_PACKAGES = [
     "kdeconnect",
     "os-prober",
     "neovim",
+
+    "lutris",
 ]
 
 # AUR packages (paru)
