@@ -8,4 +8,4 @@
 "ripgrep" = "15.2.0"
 "tree-sitter" = "0.26.9"
 
-"go:github.com/joshmedeski/sesh/v2" = "v2.26.2"
+"go:github.com/joshmedeski/sesh/v2" = "v2.27.0"
