@@ -88,7 +88,7 @@ class WorktreeTests(unittest.TestCase):
         self.temp.cleanup()
 
     def new(self, branch: str = "user/feature/one") -> Path:
-        return self.manager.new(str(self.project), branch, "main")
+        return self.manager.new(str(self.project), branch, None)
 
     def test_new_creates_derived_worktree_and_runs_integrations(self) -> None:
         destination = self.new()
@@ -109,6 +109,17 @@ class WorktreeTests(unittest.TestCase):
             text=True,
         )
         self.assertNotEqual(upstream.returncode, 0)
+
+    def test_new_detects_master_as_origin_default(self) -> None:
+        run("git", "checkout", "-b", "master", cwd=self.seed)
+        (self.seed / "MASTER").write_text("master\n")
+        run("git", "add", "MASTER", cwd=self.seed)
+        run("git", "commit", "-m", "master", cwd=self.seed)
+        run("git", "push", "origin", "master", cwd=self.seed)
+        run("git", "symbolic-ref", "HEAD", "refs/heads/master", cwd=self.remote)
+
+        destination = self.manager.new(str(self.project), "user/from-master", None)
+        self.assertTrue((destination / "MASTER").is_file())
 
     def test_new_uses_alternate_origin_base(self) -> None:
         run("git", "checkout", "-b", "develop", cwd=self.seed)

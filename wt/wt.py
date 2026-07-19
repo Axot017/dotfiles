@@ -313,7 +313,24 @@ class WorktreeManager:
         suffix = "-".join(components[1:] if len(components) > 1 else components)
         return f"{project.name}-{suffix}"
 
-    def new(self, project_value: str | None, branch: str | None, base: str) -> Path:
+    def default_base_branch(self, project: Path) -> str:
+        result = self.git(project, "ls-remote", "--symref", "origin", "HEAD", check=False)
+        if result.returncode != 0:
+            raise WTError("could not determine origin's default branch; use --base")
+        for line in (result.stdout or "").splitlines():
+            prefix = "ref: refs/heads/"
+            if line.startswith(prefix) and line.endswith("\tHEAD"):
+                branch = line[len(prefix) : -len("\tHEAD")]
+                if branch:
+                    return branch
+        raise WTError("origin does not advertise a default branch; use --base")
+
+    def new(
+        self,
+        project_value: str | None,
+        branch: str | None,
+        base: str | None,
+    ) -> Path:
         if project_value is None:
             projects = self.discover_projects()
             if not projects:
@@ -330,7 +347,8 @@ class WorktreeManager:
         if valid.returncode != 0:
             raise WTError(f"invalid branch name: {branch}")
 
-        base_branch = base.removeprefix("refs/remotes/origin/").removeprefix("origin/")
+        selected_base = base or self.default_base_branch(project)
+        base_branch = selected_base.removeprefix("refs/remotes/origin/").removeprefix("origin/")
         if not base_branch:
             raise WTError("base branch is required")
         self.git(project, "fetch", "origin", base_branch)
@@ -521,7 +539,10 @@ def build_parser() -> argparse.ArgumentParser:
     new = commands.add_parser("new", help="create and connect to a worktree")
     new.add_argument("project", nargs="?")
     new.add_argument("branch", nargs="?")
-    new.add_argument("--base", default="main", help="origin branch to start from (default: main)")
+    new.add_argument(
+        "--base",
+        help="origin branch to start from (default: origin's advertised default branch)",
+    )
 
     delete = commands.add_parser("delete", help="remove one managed worktree")
     delete.add_argument("project", nargs="?")

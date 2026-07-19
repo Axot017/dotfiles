@@ -83,7 +83,9 @@ ax snapshot "desc"   # Create manual snapshot
 ### wt - Git Worktrees
 
 `wt` keeps primary project checkouts in `~/Projects` and creates worktrees under
-`~/.worktrees`. Worktrees can be found and opened through `sesh`.
+`~/.worktrees`. Worktrees can be found and opened through `sesh`. New worktrees
+start from the default branch advertised by `origin` (for example `main` or
+`master`) unless `--base` is provided.
 
 ```bash
 wt new <project> <branch>                  # Create explicitly
