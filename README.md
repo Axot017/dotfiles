@@ -80,6 +80,26 @@ ax list              # Show package status
 ax snapshot "desc"   # Create manual snapshot
 ```
 
+### wt - Git Worktrees
+
+`wt` keeps primary project checkouts in `~/Projects` and creates worktrees under
+`~/.worktrees`. Worktrees can be found and opened through `sesh`.
+
+```bash
+wt new <project> <branch>                  # Create explicitly
+wt new                                     # Choose interactively
+wt new <project> <branch> --base <branch>  # Start from a different origin branch
+wt list [project]                          # Optionally filter by project
+wt delete <project> <branch> [--force]     # Force only when safety checks refuse
+wt clean <project> [--yes] [--force]       # Remove all managed worktrees for a project
+```
+
+`wt delete` protects against unsafe removal; `--force` overrides that protection.
+`wt clean` asks for confirmation, `--yes` accepts it non-interactively, and
+`--force` overrides deletion safety checks.
+
+Dependencies: `git`, `python3`, `fzf`, `sesh`, and `tmux`. `zoxide` is optional.
+
 ### stow - Dotfiles
 
 ```bash

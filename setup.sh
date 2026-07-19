@@ -264,6 +264,7 @@ fi
 mkdir -p "$HOME/Pictures/Screenshots"
 mkdir -p "$HOME/Videos/ScreenRecordings"
 mkdir -p "$HOME/Projects"
+mkdir -p "$HOME/.worktrees"
 
 # =============================================================================
 # Done!
