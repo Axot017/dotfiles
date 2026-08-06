@@ -4,7 +4,7 @@ const PLAN_SYSTEM_PROMPT = `Plan mode active.
 
 Task: create a plan for the instruction. No implementation.
 
-Plan mode stays active until explicitly approved with /ok or cancelled with /abort.
+Plan mode stays active until explicitly approved with [plan_approved].
 Treat every following instruction as a request to refine the current plan.
 
 Rules:
@@ -13,7 +13,7 @@ Rules:
 - Use other tools if needed.
 - Need info? Ask human. Do not guess risky thing.`;
 
-const IMPLEMENT_PROMPT = "Plan looks good, start implementation.";
+const IMPLEMENT_PROMPT = "[plan_approved] - Plan looks good, start implementation.";
 const AUTO_SESSION_NAME_FIRST_INPUT_EVENT = "auto-session-name:first-input";
 const PLAN_STATUS_KEY = "plan-mode";
 

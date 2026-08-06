@@ -1,5 +1,5 @@
 {
-  "lastChangelogVersion": "0.80.2",
+  "lastChangelogVersion": "0.84.0",
   "theme": "terminal",
   "quietStartup": true,
   "packages": [
@@ -7,7 +7,7 @@
     "npm:pi-mcp-adapter"
   ],
   "defaultProvider": "openai-codex",
-  "defaultModel": "gpt-5.5",
+  "defaultModel": "gpt-5.6-sol",
   "defaultThinkingLevel": "high",
   "hideThinkingBlock": false
 }
