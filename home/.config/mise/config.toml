@@ -6,6 +6,6 @@
 "pi" = "0.84.0"
 "rtk" = "0.44.2"
 "ripgrep" = "15.2.0"
-"tree-sitter" = "0.26.11"
+"tree-sitter" = "0.26.12"
 
 "go:github.com/joshmedeski/sesh/v2" = "v2.28.0"
