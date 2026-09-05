@@ -102,6 +102,17 @@ wt clean <project> [--yes] [--force]       # Remove all managed worktrees for a 
 
 Dependencies: `git`, `python3`, `fzf`, `sesh`, and `tmux`. `zoxide` is optional.
 
+### Pi - Chat appearance
+
+Pi uses `terminal-messages`, a local copy of `pi-terminal-theme` with only
+`userMessageBg` changed. Your messages have a subtle blue-gray background matched
+to Ghostty's Tokyo Night Storm palette; agent and tool messages stay unchanged.
+
+Adjust `colors.userMessageBg` in `home/.pi/agent/themes/terminal-messages.json`.
+After applying dotfiles, restart Pi or select `terminal-messages` in `/settings`.
+Edits to the active theme hot-reload. Select `terminal` to restore the original.
+The custom background is fixed for the current dark palette, not light/dark adaptive.
+
 ### stow - Dotfiles
 
 ```bash

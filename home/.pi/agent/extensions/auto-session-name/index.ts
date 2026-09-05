@@ -1,15 +1,18 @@
 import { readFile } from "node:fs/promises";
 import { homedir } from "node:os";
 import { join } from "node:path";
-import { complete, type Api, type Model, type UserMessage } from "@mariozechner/pi-ai";
+import {
+  completeSimple,
+  getSupportedThinkingLevels,
+  type Api,
+  type Model,
+  type ThinkingLevel,
+  type UserMessage,
+} from "@mariozechner/pi-ai";
 import type { ExtensionAPI, ExtensionContext } from "@mariozechner/pi-coding-agent";
 
 interface AutoSessionNameConfig {
   enabled: boolean;
-  useCurrentModel: boolean;
-  useCurrentAuth: boolean;
-  provider?: string;
-  model?: string;
   maxTokens: number;
   maxTitleLength: number;
   notify: boolean;
@@ -17,10 +20,6 @@ interface AutoSessionNameConfig {
 
 const DEFAULT_CONFIG: AutoSessionNameConfig = {
   enabled: true,
-  useCurrentModel: false,
-  useCurrentAuth: true,
-  provider: "openai-codex",
-  model: "gpt-5.4-mini",
   maxTokens: 64,
   maxTitleLength: 80,
   notify: true,
@@ -37,10 +36,6 @@ function asBool(value: unknown, fallback: boolean): boolean {
   return typeof value === "boolean" ? value : fallback;
 }
 
-function asString(value: unknown, fallback: string): string {
-  return typeof value === "string" && value.trim() ? value.trim() : fallback;
-}
-
 function asPositiveInt(value: unknown, fallback: number): number {
   return typeof value === "number" && Number.isFinite(value) && value > 0 ? Math.floor(value) : fallback;
 }
@@ -51,10 +46,6 @@ async function loadConfig(ctx?: ExtensionContext): Promise<AutoSessionNameConfig
     const parsed = JSON.parse(raw) as Record<string, unknown>;
     return {
       enabled: asBool(parsed.enabled, DEFAULT_CONFIG.enabled),
-      useCurrentModel: asBool(parsed.useCurrentModel, DEFAULT_CONFIG.useCurrentModel),
-      useCurrentAuth: asBool(parsed.useCurrentAuth, DEFAULT_CONFIG.useCurrentAuth),
-      provider: typeof parsed.provider === "string" && parsed.provider.trim() ? parsed.provider.trim() : DEFAULT_CONFIG.provider,
-      model: typeof parsed.model === "string" && parsed.model.trim() ? parsed.model.trim() : DEFAULT_CONFIG.model,
       maxTokens: asPositiveInt(parsed.maxTokens, DEFAULT_CONFIG.maxTokens),
       maxTitleLength: asPositiveInt(parsed.maxTitleLength, DEFAULT_CONFIG.maxTitleLength),
       notify: asBool(parsed.notify, DEFAULT_CONFIG.notify),
@@ -96,14 +87,10 @@ function sanitizeTitle(raw: string, maxLength: number): string {
   return title;
 }
 
-function resolveModel(ctx: ExtensionContext, config: AutoSessionNameConfig): Model<Api> | undefined {
-  if (config.useCurrentModel || !config.provider || !config.model) return ctx.model ?? undefined;
-  return ctx.modelRegistry.find(config.provider, config.model);
-}
-
-function resolveAuthModel(ctx: ExtensionContext, config: AutoSessionNameConfig, targetModel: Model<Api>): Model<Api> {
-  if (config.useCurrentAuth && ctx.model) return ctx.model;
-  return targetModel;
+function getLowestReasoningLevel(model: Model<Api>): ThinkingLevel | undefined {
+  return getSupportedThinkingLevels(model).find(
+    (level): level is ThinkingLevel => level !== "off",
+  );
 }
 
 async function generateName(
@@ -113,15 +100,13 @@ async function generateName(
   firstMessage: string,
   signal: AbortSignal,
 ) {
-  const model = resolveModel(ctx, config);
+  const model = ctx.model;
   if (!model) {
-    const name = config.useCurrentModel ? "current model" : `${config.provider}/${config.model}`;
-    if (ctx.hasUI) ctx.ui.notify(`auto-session-name: model not found: ${name}`, "warning");
+    if (ctx.hasUI) ctx.ui.notify("auto-session-name: no model selected", "warning");
     return;
   }
 
-  const authModel = resolveAuthModel(ctx, config, model);
-  const auth = await ctx.modelRegistry.getApiKeyAndHeaders(authModel);
+  const auth = await ctx.modelRegistry.getApiKeyAndHeaders(model);
   if (!auth.ok) {
     if (ctx.hasUI) ctx.ui.notify(`auto-session-name: auth failed: ${auth.error}`, "warning");
     return;
@@ -140,13 +125,16 @@ async function generateName(
     },
   ];
 
-  const response = await complete(
-    model,
+  const requestModel = auth.baseUrl ? { ...model, baseUrl: auth.baseUrl } : model;
+  const response = await completeSimple(
+    requestModel,
     { messages },
     {
       apiKey: auth.apiKey,
       headers: auth.headers,
+      env: auth.env,
       maxTokens: config.maxTokens,
+      reasoning: getLowestReasoningLevel(model),
       signal,
     },
   );
