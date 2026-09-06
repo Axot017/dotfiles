@@ -1,9 +1,8 @@
 {
   "lastChangelogVersion": "0.85.1",
-  "theme": "terminal-messages",
+  "theme": "dark",
   "quietStartup": true,
   "packages": [
-    "npm:pi-mcp-adapter",
     "npm:@plannotator/pi-extension",
     "npm:pi-subagents",
     "npm:@narumitw/pi-btw",

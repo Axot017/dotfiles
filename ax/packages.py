@@ -146,7 +146,6 @@ AUR_PACKAGES = [
 
     "helium-browser-bin",
     "vial-appimage",
-    "codebase-memory-mcp-bin",
     "gyroflow-bin",
 ]
 
